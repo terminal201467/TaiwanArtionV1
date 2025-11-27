@@ -10,7 +10,7 @@ import GoogleSignIn
 import FBSDKLoginKit
 import FBSDKCoreKit
 import FirebaseAuth
-import Firebase
+import FirebaseCore
 import os.log
 
 class FirebaseAuth {

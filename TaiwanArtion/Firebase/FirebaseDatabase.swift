@@ -5,7 +5,7 @@
 //  Created by Jhen Mu on 2023/6/15.
 //
 
-import Firebase
+import FirebaseCore
 import FirebaseFirestore
 
 class FirebaseDatabase {

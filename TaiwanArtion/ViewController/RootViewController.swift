@@ -7,7 +7,7 @@
 
 import UIKit
 import RxSwift
-import Firebase
+import FirebaseCore
 
 class RootViewController: UITabBarController {
     
