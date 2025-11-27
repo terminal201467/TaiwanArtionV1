@@ -19,7 +19,6 @@ target 'TaiwanArtion' do
   pod 'GoogleSignIn'
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
-  pod 'LineSDKSwift'
   pod 'Kingfisher', '~> 6.0'
 
   target 'TaiwanArtionTests' do

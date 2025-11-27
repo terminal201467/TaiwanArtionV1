@@ -11,6 +11,7 @@ import FBSDKLoginKit
 import FBSDKCoreKit
 import FirebaseAuth
 import Firebase
+import os.log
 
 class FirebaseAuth {
     
@@ -29,22 +30,25 @@ class FirebaseAuth {
     func googleSignInAction(with controller: UIViewController, completion: @escaping (User) -> Void) {
         GIDSignIn.sharedInstance.signIn(withPresenting: controller) { authResult, error in
             if let error = error {
-                print("error:\(error.localizedDescription)")
+                AppLogger.error("Google 登入失敗", category: .auth, error: error)
             }
-            
+
             if let result = authResult {
-                print(
+                AppLogger.logAuthentication(
+                    action: "Google Sign In",
+                    provider: "Google",
+                    userID: result.user.userID,
+                    success: true
+                )
+                AppLogger.debug(
                 """
                 ----------Google登入資訊-----------
-                userID:\(result.user.userID)
-                name:\(result.user.profile?.name)
-                email:\(result.user.profile?.email)
-                url:\(result.user.profile?.imageURL(withDimension: .zero))
-                client:\(result.user.configuration.clientID)
-                accessToken:\(result.user.accessToken)
-                refreshToken:\(result.user.refreshToken.tokenString)
+                userID:\(result.user.userID ?? "")
+                name:\(result.user.profile?.name ?? "")
+                email:\(result.user.profile?.email ?? "")
+                url:\(result.user.profile?.imageURL(withDimension: .zero)?.absoluteString ?? "")
                 ----------------------------------
-                """
+                """, category: .auth
                 )
                 let user = User(birth: "未知的生日",
                                 email: result.user.profile?.email ?? "未知的Email",
@@ -60,22 +64,22 @@ class FirebaseAuth {
     //Google登入
     func googleSignIn(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?, isLogginCompletion: @escaping (Bool) -> Void) {
         if let error = error {
-            print("Google 登入發生錯誤：\(error.localizedDescription)")
+            AppLogger.error("Google 登入發生錯誤", category: .auth, error: error)
             return
         }
-        
+
         guard let idToken = user.idToken else { return }
         let accessToken = user.accessToken.tokenString
         let credential = GoogleAuthProvider.credential(withIDToken: idToken.tokenString,
                                                        accessToken: accessToken)
-        
+
         // 使用 Firebase 認證憑證登入
         Auth.auth().signIn(with: credential) { (authResult, error) in
             if let error = error {
-                print("Firebase 登入發生錯誤：\(error.localizedDescription)")
+                AppLogger.error("Firebase 登入發生錯誤", category: .auth, error: error)
                 return
             }
-            print("使用者成功登入：\(authResult?.user.displayName ?? "未知使用者")")
+            AppLogger.info("使用者成功登入：\(authResult?.user.displayName ?? "未知使用者")", category: .auth)
             isLogginCompletion((authResult?.user.isEmailVerified)!)
         }
     }
@@ -90,24 +94,26 @@ class FirebaseAuth {
         let loginManager = LoginManager()
         loginManager.logIn(permissions: ["public_profile","email"], from: controller) { result, error in
             if let error = error {
-                print("Facebook 登入發生錯誤：\(error.localizedDescription)")
+                AppLogger.error("Facebook 登入發生錯誤", category: .auth, error: error)
                 return
             } else if let result = result, !result.isCancelled {
                 if AccessToken.current != nil {
                     Profile.loadCurrentProfile { (profile, error) in
                         if let profile = profile {
-                            print(
+                            AppLogger.logAuthentication(
+                                action: "Facebook Sign In",
+                                provider: "Facebook",
+                                userID: profile.userID,
+                                success: true
+                            )
+                            AppLogger.debug(
                             """
-                            ---------facebook登入資訊----------
+                            ---------Facebook登入資訊----------
                             userID:\(profile.userID)
-                            refreshDate:\(profile.refreshDate)
-                            name:\(profile.name!)
-                            birthDay:\(profile.birthday)
-                            gender:\(profile.gender)
-                            imageURL:\(profile.imageURL!)
-                            email:\(profile.email!)
+                            name:\(profile.name ?? "")
+                            email:\(profile.email ?? "")
                             ----------------------------------
-                            """
+                            """, category: .auth
                             )
                             let formatter = DateFormatter()
                             let user = User(birth: formatter.string(from: profile.birthday ?? Date()) ?? "未知的生日",
@@ -128,21 +134,23 @@ class FirebaseAuth {
     func normalCreateAccount(email: String, password: String, completion: @escaping (User) -> Void) {
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
-                print("註冊失敗：\(error.localizedDescription)")
+                AppLogger.error("註冊失敗", category: .auth, error: error)
             }
-            
+
             if let result = authResult {
-                print(
+                AppLogger.logAuthentication(
+                    action: "Normal Sign Up",
+                    provider: "Email",
+                    userID: result.user.uid,
+                    success: true
+                )
+                AppLogger.debug(
                 """
                 ----------一般註冊成功資訊-----------
-                name:\(result.user.displayName)
-                email:\(result.user.email!)
+                email:\(result.user.email ?? "")
                 userID:\(result.user.uid)
-                phone:\(result.user.phoneNumber!)
-                headImage:\(result.user.photoURL?.scheme!)
-                token:\(result.user.refreshToken!)
                 ----------------------------------
-                """
+                """, category: .auth
                 )
                 let user = User(birth: "未知的生日",
                                 email: result.user.email ?? "未知的Email",
@@ -158,21 +166,23 @@ class FirebaseAuth {
     func normalLogin(email: String, password: String, completion: @escaping (User) -> Void) {
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
             if let error = error {
-                print("登入失敗：\(error.localizedDescription)")
+                AppLogger.error("登入失敗", category: .auth, error: error)
             }
-            
+
             if let result = authResult {
-                print(
+                AppLogger.logAuthentication(
+                    action: "Normal Login",
+                    provider: "Email",
+                    userID: result.user.uid,
+                    success: true
+                )
+                AppLogger.debug(
                 """
                 ----------一般登入成功資訊-----------
-                name:\(result.user.displayName)
-                email:\(result.user.email)
+                email:\(result.user.email ?? "")
                 userID:\(result.user.uid)
-                phone:\(result.user.phoneNumber)
-                headImage:\(result.user.photoURL)
-                token:\(result.user.refreshToken)
                 ----------------------------------
-                """
+                """, category: .auth
                 )
                 let user = User(birth: "未知的生日",
                                 email: result.user.email ?? "未知的Email",
@@ -189,12 +199,14 @@ class FirebaseAuth {
     func sendMessengeVerified(byPhoneNumber number: String) {
         PhoneAuthProvider.provider().verifyPhoneNumber(number, uiDelegate: nil) { verificationID, error in
             if let error = error {
-                print("Error sending verification code: \(error.localizedDescription)")
+                AppLogger.error("發送驗證碼失敗", category: .auth, error: error)
                 return
             }
-            print("verificationID:\(verificationID!)")
-            // 將 verificationID 儲存起來，稍後用於驗證碼確認
-            UserDefaults.standard.set(verificationID!, forKey: "authVerificationID")
+            if let verificationID = verificationID {
+                AppLogger.info("驗證碼已發送，verificationID: \(verificationID)", category: .auth)
+                // 將 verificationID 儲存起來，稍後用於驗證碼確認
+                UserDefaults.standard.set(verificationID, forKey: "authVerificationID")
+            }
         }
     }
     
@@ -210,9 +222,10 @@ class FirebaseAuth {
 
         Auth.auth().signIn(with: credential) { authResult, error in
             if let error = error {
-                print("Error verifying verification code: \(error.localizedDescription)")
+                AppLogger.error("驗證碼驗證失敗", category: .auth, error: error)
                 return
             }
+            AppLogger.info("驗證碼驗證成功", category: .auth)
             authResult?.additionalUserInfo?.username
             // 驗證成功，authResult 中包含使用者資訊
         }
@@ -222,18 +235,18 @@ class FirebaseAuth {
     func sendEmailVerified(byEmail email: String, byPassword password: String) {
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
-                print("Error creating user: \(error.localizedDescription)")
+                AppLogger.error("創建用戶失敗", category: .auth, error: error)
                 return
             }
 
             // 發送驗證郵件
             authResult?.user.sendEmailVerification(completion: { error in
                 if let error = error {
-                    print("Error sending verification email: \(error.localizedDescription)")
+                    AppLogger.error("發送驗證郵件失敗", category: .auth, error: error)
                     return
                 }
 
-                print("Verification email sent.")
+                AppLogger.info("驗證郵件已發送", category: .auth)
             })
         }
     }
@@ -244,11 +257,11 @@ class FirebaseAuth {
 
         Auth.auth().currentUser?.reauthenticate(with: credential) { authResult, error in
             if let error = error {
-                print("Error reauthenticating: \(error.localizedDescription)")
+                AppLogger.error("重新認證失敗", category: .auth, error: error)
                 return
             }
             // 驗證成功，更新你的使用者介面
-            print("Email verification succeeded.")
+            AppLogger.info("Email 驗證成功", category: .auth)
         }
     }
 }

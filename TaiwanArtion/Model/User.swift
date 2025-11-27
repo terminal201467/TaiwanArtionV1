@@ -8,13 +8,6 @@
 import Foundation
 
 struct User {
-    
-//    var name: String
-//    var gender: String
-//    var phone: String
-//    var email: String
-//    var birth: String
-//    var headImage: String
     var birth: String
     var collectExhibitionHalls: [ExhibitionHallInfo]?
     var collectExhibitionID: [String]?
