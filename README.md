@@ -72,26 +72,29 @@
 - **Repository Pattern**: 統一的數據存取介面
 
 #### UI 框架
-- **SnapKit 5.6.0**: 聲明式 Auto Layout
-- **Kingfisher 6.3.1**: 高效圖片緩存和下載
+- **SnapKit 5.7.1**: 聲明式 Auto Layout
+- **Kingfisher 7.12.0**: 高效圖片緩存和下載
+  - 全域配置：100MB 記憶體快取、500MB 磁碟快取
+  - 自動降採樣和背景解碼優化
 
 #### 後端服務
-- **Firebase 10.14.0**:
-  - Firebase Core: 核心服務
-  - Firebase Analytics: 數據分析
-  - Firebase Auth: 身份認證
-  - Firebase Firestore: NoSQL 雲端數據庫
+- **Firebase 11.15.0**:
+  - FirebaseCore: 核心服務
+  - FirebaseAnalytics: 數據分析
+  - FirebaseAuth: 身份認證
+  - FirebaseFirestore: NoSQL 雲端數據庫
+  - 支援分頁載入和查詢優化
 
 #### 響應式編程
-- **RxSwift 6.5.0**: 核心響應式庫
-- **RxCocoa 6.5.0**: UIKit 擴展
-- **RxRelay 6.5.0**: Subject 包裝
+- **RxSwift 6.9.0**: 核心響應式庫
+- **RxCocoa 6.9.0**: UIKit 擴展
+- **RxRelay 6.9.0**: Subject 包裝
 - **RxDataSources 5.0.0**: TableView/CollectionView 數據源
-- **RxGesture**: 手勢識別擴展
+- **RxGesture 4.0.4**: 手勢識別擴展
 
 #### 第三方登入
-- **Google Sign-In 7.0.0**: Google 帳號登入
-- **Facebook SDK 16.1.3**: Facebook 帳號登入
+- **Google Sign-In 8.0.0**: Google 帳號登入
+- **Facebook SDK 17.4.0**: Facebook 帳號登入
   - FBSDKCoreKit
   - FBSDKLoginKit
 
@@ -217,15 +220,43 @@ xcodebuild -workspace TaiwanArtion.xcworkspace \
 - ✅ [待辦清單](TODO_CHECKLIST.md) - 詳細的任務列表
 - 📖 [翻新指南](REFACTORING_GUIDE.md) - 快速入門指南
 
-### 翻新重點
-1. **安全性修復** - API Keys 保護、Keychain 整合
-2. **代碼清理** - 移除 debug 代碼、統一日誌系統
-3. **功能完善** - 完成未實現的功能
-4. **依賴更新** - 更新到最新穩定版本
-5. **效能優化** - Firebase 查詢優化、圖片緩存改進
-6. **測試與文檔** - 增加測試覆蓋率、完善文檔
+### 翻新進度
 
-詳細計劃請參考 [REFACTORING_GUIDE.md](REFACTORING_GUIDE.md)
+| 階段 | 狀態 | 說明 |
+|------|------|------|
+| **Phase 1: 安全性修復** | ⏸️ 待開始 | API Keys 保護、Keychain 整合 |
+| **Phase 2: 代碼清理** | ⏸️ 待開始 | 移除 debug 代碼、統一日誌系統 |
+| **Phase 3: 功能完善** | ⏸️ 待開始 | 完成未實現的功能 |
+| **Phase 4: 依賴更新** | ✅ 已完成 | Firebase 11.x、RxSwift 6.9、Kingfisher 7.x |
+| **Phase 5: 效能優化** | ✅ 已完成 | Firebase 分頁、Kingfisher 配置、記憶體優化 |
+| **Phase 6: 測試與文檔** | 🔄 進行中 | 增加測試覆蓋率、完善文檔 |
+
+### 最近更新 (Phase 4 & 5)
+
+#### Phase 4: 依賴更新 ✅
+- ✅ 更新 Firebase SDK 至 11.15.0
+- ✅ 更新 RxSwift 生態系至 6.9.0
+- ✅ 更新 Kingfisher 至 7.12.0
+- ✅ 更新 Google Sign-In 至 8.0.0
+- ✅ 更新 Facebook SDK 至 17.4.0
+- ✅ 修復所有 `import Firebase` 改為 `import FirebaseCore`
+
+#### Phase 5: 效能優化 ✅
+- ✅ Firebase 查詢優化
+  - `getRandomDocuments()` 使用 limit 查詢
+  - 實作分頁載入 `getPaginatedDocuments()`
+  - 添加 AppLogger 性能追蹤
+- ✅ Kingfisher 全域配置
+  - 記憶體快取: 100 MB
+  - 磁碟快取: 500 MB
+  - 快取過期: 7 天
+- ✅ 修復 RxSwift 記憶體洩漏
+  - 5 處 closure 記憶體洩漏修復
+  - 添加 `[weak self]` 防止 retain cycle
+
+詳細計劃請參考：
+- [翻新指南](REFACTORING_GUIDE.md)
+- [依賴更新摘要](DEPENDENCY_UPDATE_SUMMARY.md)
 
 ## 代碼規範
 
