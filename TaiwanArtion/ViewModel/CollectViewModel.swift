@@ -106,18 +106,25 @@ class CollectViewModel: CollectInputOutputType, CollectInput, CollectOutput {
     
     //MARK: -Initialization
     init() {
-        
+        AppLogger.enter(category: .viewModel)
+
         fetchFirebaseCollectData(by: 10) { infos in
-            print("info:\(infos)")
+            AppLogger.logViewModelEvent(
+                viewModel: "CollectViewModel",
+                event: "FetchCollectData",
+                data: ["count": infos.count]
+            )
             self.currentExhibitionContent.accept(infos)
         }
+
+        AppLogger.exit(category: .viewModel)
     }
     
     //向firebase拿資料，藉由全部展覽、今天開始、明天開始、本週開始等四個頁籤去filter要拿取的資料
     private func fetchFirebaseCollectData(by count: Int, completion: @escaping (([ExhibitionInfo]) -> Void)) {
         firebase.getHotDocument(count: count) { data, error in
             if let error = error {
-                print("error:\(error)")
+                AppLogger.error("獲取熱門展覽失敗", category: .viewModel, error: error)
             } else if let data = data {
                 var info: [ExhibitionInfo] = []
                 data.map { detailData in
@@ -141,18 +148,186 @@ class CollectViewModel: CollectInputOutputType, CollectInput, CollectOutput {
         }
     }
     
-    //向firebase fetch最近的搜尋紀錄，CRUD?
-    private func fetchFirebaseCollectSearchingData(by: Int, completion: @escaping (() -> Void)) {
-        
+    /// 向firebase fetch最近的搜尋紀錄
+    /// - Parameters:
+    ///   - userID: 使用者 ID
+    ///   - completion: 完成回調
+    private func fetchFirebaseCollectSearchingData(by userID: String, completion: @escaping (() -> Void)) {
+        AppLogger.enter(category: .viewModel)
+
+        let userFirebase = FirebaseDatabase(collectionName: "users")
+        userFirebase.readDocument(documentID: userID) { [weak self] data, error in
+            guard let self = self else { return }
+
+            if let error = error {
+                AppLogger.error("獲取搜尋紀錄失敗", category: .viewModel, error: error)
+                completion()
+                return
+            }
+
+            if let data = data,
+               let searchHistory = data["collectSearchHistory"] as? [String] {
+                AppLogger.logViewModelEvent(
+                    viewModel: "CollectViewModel",
+                    event: "FetchSearchHistory",
+                    data: ["count": searchHistory.count]
+                )
+                self.searchExhibitionContentHistory.accept(searchHistory)
+            } else {
+                AppLogger.warning("搜尋紀錄為空", category: .viewModel)
+                self.searchExhibitionContentHistory.accept([])
+            }
+
+            completion()
+        }
+
+        AppLogger.exit(category: .viewModel)
     }
     
+    /// 向firebase fetch收藏的新聞資料
+    /// - Parameters:
+    ///   - userID: 使用者 ID
+    ///   - completion: 完成回調，返回新聞陣列
     private func fetchFirebaseNewsData(by userID: String, completion: @escaping (([News]) -> Void)) {
-        
+        AppLogger.enter(category: .viewModel)
+
+        let userFirebase = FirebaseDatabase(collectionName: "users")
+        userFirebase.readDocument(documentID: userID) { [weak self] userData, error in
+            guard let self = self else { return }
+
+            if let error = error {
+                AppLogger.error("獲取使用者收藏新聞 ID 失敗", category: .viewModel, error: error)
+                completion([])
+                return
+            }
+
+            guard let userData = userData,
+                  let newsIDs = userData["collectNewsID"] as? [String],
+                  !newsIDs.isEmpty else {
+                AppLogger.warning("使用者無收藏新聞", category: .viewModel)
+                completion([])
+                return
+            }
+
+            AppLogger.info("找到 \(newsIDs.count) 個收藏新聞 ID", category: .viewModel)
+
+            let newsFirebase = FirebaseDatabase(collectionName: "news")
+            var newsList: [News] = []
+            let dispatchGroup = DispatchGroup()
+
+            for newsID in newsIDs {
+                dispatchGroup.enter()
+                newsFirebase.readDocument(documentID: newsID) { newsData, error in
+                    defer { dispatchGroup.leave() }
+
+                    if let error = error {
+                        AppLogger.error("獲取新聞失敗: \(newsID)", category: .viewModel, error: error)
+                        return
+                    }
+
+                    if let newsData = newsData,
+                       let id = newsData["id"] as? String,
+                       let title = newsData["title"] as? String,
+                       let date = newsData["date"] as? String,
+                       let author = newsData["author"] as? String,
+                       let image = newsData["image"] as? String,
+                       let description = newsData["description"] as? String {
+                        let news = News(
+                            id: id,
+                            title: title,
+                            date: date,
+                            author: author,
+                            image: image,
+                            description: description
+                        )
+                        newsList.append(news)
+                    }
+                }
+            }
+
+            dispatchGroup.notify(queue: .main) {
+                AppLogger.logViewModelEvent(
+                    viewModel: "CollectViewModel",
+                    event: "FetchNewsData",
+                    data: ["count": newsList.count]
+                )
+                self.collectNews.accept(newsList)
+                completion(newsList)
+            }
+        }
+
+        AppLogger.exit(category: .viewModel)
     }
     
+    /// 根據當前選擇的時間篩選器來過濾展覽資料
+    /// - Parameter currentMenuPage: 0-全部展覽, 1-今天開始, 2-明天開始, 3-本週開始
     private func fetchStore(currentMenuPage: Int) {
-        
-        
+        AppLogger.enter(category: .viewModel)
+        AppLogger.logViewModelEvent(
+            viewModel: "CollectViewModel",
+            event: "FilterExhibitions",
+            data: ["menuPage": currentMenuPage]
+        )
+
+        let allExhibitions = currentExhibitionContent.value
+        let filteredExhibitions: [ExhibitionInfo]
+
+        switch currentMenuPage {
+        case 0:
+            // 全部展覽
+            filteredExhibitions = allExhibitions
+            AppLogger.debug("顯示全部展覽: \(allExhibitions.count) 個", category: .viewModel)
+
+        case 1:
+            // 今天開始
+            filteredExhibitions = filterExhibitions(allExhibitions, startingFrom: Date())
+            AppLogger.debug("顯示今天開始的展覽: \(filteredExhibitions.count) 個", category: .viewModel)
+
+        case 2:
+            // 明天開始
+            if let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date()) {
+                filteredExhibitions = filterExhibitions(allExhibitions, startingFrom: tomorrow)
+                AppLogger.debug("顯示明天開始的展覽: \(filteredExhibitions.count) 個", category: .viewModel)
+            } else {
+                filteredExhibitions = []
+                AppLogger.warning("無法計算明天日期", category: .viewModel)
+            }
+
+        case 3:
+            // 本週開始
+            if let startOfWeek = Calendar.current.date(from: Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date())) {
+                filteredExhibitions = filterExhibitions(allExhibitions, startingFrom: startOfWeek)
+                AppLogger.debug("顯示本週開始的展覽: \(filteredExhibitions.count) 個", category: .viewModel)
+            } else {
+                filteredExhibitions = []
+                AppLogger.warning("無法計算本週開始日期", category: .viewModel)
+            }
+
+        default:
+            filteredExhibitions = allExhibitions
+            AppLogger.warning("未知的 menuPage: \(currentMenuPage)，顯示全部展覽", category: .viewModel)
+        }
+
+        currentExhibitionContent.accept(filteredExhibitions)
+        AppLogger.exit(category: .viewModel)
+    }
+
+    /// 過濾展覽：只保留指定日期之後開始的展覽
+    /// - Parameters:
+    ///   - exhibitions: 要過濾的展覽陣列
+    ///   - startDate: 起始日期
+    /// - Returns: 過濾後的展覽陣列
+    private func filterExhibitions(_ exhibitions: [ExhibitionInfo], startingFrom startDate: Date) -> [ExhibitionInfo] {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy/MM/dd"
+
+        return exhibitions.filter { exhibition in
+            guard let exhibitionDate = dateFormatter.date(from: exhibition.dateString) else {
+                AppLogger.warning("無法解析展覽日期: \(exhibition.dateString)", category: .viewModel)
+                return false
+            }
+            return exhibitionDate >= startDate
+        }
     }
     
 }

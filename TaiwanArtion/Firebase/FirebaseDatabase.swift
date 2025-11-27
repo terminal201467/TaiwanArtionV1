@@ -88,12 +88,74 @@ class FirebaseDatabase {
         }
     }
     
-    func getPopularDocument() {
-        
+    /// 獲取熱門展覽（依瀏覽次數排序）
+    /// - Parameters:
+    ///   - count: 要獲取的展覽數量，預設為 10
+    ///   - completion: 完成回調，返回展覽資料陣列或錯誤
+    func getPopularDocument(count: Int = 10, completion: @escaping ([[String: Any]]?, Error?) -> Void) {
+        AppLogger.enter(category: .firebase)
+
+        db.collection(collectionName)
+            .order(by: "viewCount", descending: true)
+            .limit(to: count)
+            .getDocuments { (querySnapshot, error) in
+                if let error = error {
+                    AppLogger.logFirebaseOperation(
+                        operation: "getPopularDocument",
+                        collection: self.collectionName,
+                        success: false,
+                        error: error
+                    )
+                    completion(nil, error)
+                } else {
+                    let results = querySnapshot?.documents.map { $0.data() }
+                    AppLogger.logFirebaseOperation(
+                        operation: "getPopularDocument",
+                        collection: self.collectionName,
+                        success: true
+                    )
+                    AppLogger.info("獲取 \(results?.count ?? 0) 個熱門展覽", category: .firebase)
+                    completion(results, nil)
+                }
+            }
+
+        AppLogger.exit(category: .firebase)
     }
-    
-    func getHighEvaluationDocument() {
-        
+
+    /// 獲取高評分展覽（依評分排序）
+    /// - Parameters:
+    ///   - count: 要獲取的展覽數量，預設為 10
+    ///   - minRating: 最低評分，預設為 4.0
+    ///   - completion: 完成回調，返回展覽資料陣列或錯誤
+    func getHighEvaluationDocument(count: Int = 10, minRating: Double = 4.0, completion: @escaping ([[String: Any]]?, Error?) -> Void) {
+        AppLogger.enter(category: .firebase)
+
+        db.collection(collectionName)
+            .whereField("rating", isGreaterThanOrEqualTo: minRating)
+            .order(by: "rating", descending: true)
+            .limit(to: count)
+            .getDocuments { (querySnapshot, error) in
+                if let error = error {
+                    AppLogger.logFirebaseOperation(
+                        operation: "getHighEvaluationDocument",
+                        collection: self.collectionName,
+                        success: false,
+                        error: error
+                    )
+                    completion(nil, error)
+                } else {
+                    let results = querySnapshot?.documents.map { $0.data() }
+                    AppLogger.logFirebaseOperation(
+                        operation: "getHighEvaluationDocument",
+                        collection: self.collectionName,
+                        success: true
+                    )
+                    AppLogger.info("獲取 \(results?.count ?? 0) 個高評分展覽", category: .firebase)
+                    completion(results, nil)
+                }
+            }
+
+        AppLogger.exit(category: .firebase)
     }
     
     //首頁讀取資料的相關function
