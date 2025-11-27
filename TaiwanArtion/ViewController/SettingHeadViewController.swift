@@ -89,10 +89,13 @@ extension SettingHeadViewController: UICollectionViewDelegateFlowLayout, UIColle
             return cell
         case .button:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ButtonCollectionViewCell.reuseIdentifier, for: indexPath) as! ButtonCollectionViewCell
-            viewModel.output.isAllowSavePhoto.subscribe { allowed in
-                cell.configureRoundButton(isAllowToTap: allowed, buttonTitle: "儲存")
-            }
-            cell.action = {
+            viewModel.output.isAllowSavePhoto
+                .subscribe(onNext: { [weak cell] allowed in
+                    cell?.configureRoundButton(isAllowToTap: allowed, buttonTitle: "儲存")
+                })
+                .disposed(by: disposeBag)
+            cell.action = { [weak self] in
+                guard let self = self else { return }
                 self.viewModel.input.savePhoto.onNext(())
                 self.navigationController?.popViewController(animated: true)
             }

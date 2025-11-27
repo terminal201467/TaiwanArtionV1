@@ -46,7 +46,8 @@ class LoginViewController: UIViewController {
     }
     
     private func setLoginSuccess() {
-        self.viewModel.loginSuccessRelay.subscribe(onNext: { loginSuccess in
+        self.viewModel.loginSuccessRelay.subscribe(onNext: { [weak self] loginSuccess in
+            guard let self = self else { return }
             self.navigationController?.popViewController(animated: true)
             self.loginSuccess?()
         })

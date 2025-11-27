@@ -233,7 +233,8 @@ extension ExhibitionCardViewController: UITableViewDelegate, UITableViewDataSour
             }
         case .evaluate:
             let view = AllCommentHeaderView()
-            view.exhibitionCardItemView.pushToViewController = {
+            view.exhibitionCardItemView.pushToViewController = { [weak self] in
+                guard let self = self else { return }
                 let viewController = EvaluateViewController()
                 self.navigationController?.pushViewController(viewController, animated: true)
             }

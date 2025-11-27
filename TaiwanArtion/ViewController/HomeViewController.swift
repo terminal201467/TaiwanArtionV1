@@ -122,7 +122,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: MainPhotosTableViewCell.reuseIdentifier, for: indexPath) as! MainPhotosTableViewCell
                 cell.selectionStyle = .none
 //                cell.mainPhotos = self.viewModel.mainPhoto
-                cell.pushToViewController = { exhibition in
+                cell.pushToViewController = { [weak self] exhibition in
+                    guard let self = self else { return }
                     let viewController = ExhibitionCardViewController()
                     self.navigationController?.pushViewController(viewController, animated: true)
                 }
@@ -133,7 +134,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             switch HotCell(rawValue: indexPath.row) {
             case .hotExhibition:
                 let cell = tableView.dequeueReusableCell(withIdentifier: HotHxhibitionTableViewCell.reuseIdentifier, for: indexPath) as! HotHxhibitionTableViewCell
-                cell.pushToViewController = { exhibition in
+                cell.pushToViewController = { [weak self] exhibition in
+                    guard let self = self else { return }
                     let viewController = ExhibitionCardViewController()
                     self.navigationController?.pushViewController(viewController, animated: true)
                 }
@@ -146,7 +148,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             case .newsExhibition:
                 let cell = tableView.dequeueReusableCell(withIdentifier: NewsTableViewCell.reuseIdentifier, for: indexPath) as! NewsTableViewCell
                 cell.selectionStyle = .none
-                cell.pushToViewController = { news in
+                cell.pushToViewController = { [weak self] news in
+                    guard let self = self else { return }
                     let viewController = NewsViewController()
                     self.navigationController?.pushViewController(viewController, animated: true)
 //                    viewController.backAction = {
@@ -163,7 +166,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 AllExhibitionTableViewCell
                 cell.selectionStyle = .none
                 cell.backgroundColor = .whiteGrayColor
-                cell.pushToViewController = { exhibition in
+                cell.pushToViewController = { [weak self] exhibition in
+                    guard let self = self else { return }
                     let viewController = ExhibitionCardViewController()
                     self.navigationController?.pushViewController(viewController, animated: true)
                 }
