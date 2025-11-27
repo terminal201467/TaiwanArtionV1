@@ -187,7 +187,6 @@ class FirebaseAuth {
     
     //手機號碼驗證
     func sendMessengeVerified(byPhoneNumber number: String) {
-        Auth.auth().settings?.isAppVerificationDisabledForTesting = true  // 開發測試用，實際使用需移除
         PhoneAuthProvider.provider().verifyPhoneNumber(number, uiDelegate: nil) { verificationID, error in
             if let error = error {
                 print("Error sending verification code: \(error.localizedDescription)")
