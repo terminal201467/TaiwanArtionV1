@@ -283,10 +283,12 @@ struct AppConfig {
 
 ---
 
-## 📅 Phase B: Supabase 基礎建設
+## 📅 Phase B: Supabase 基礎建設 + Repository 重構
 
-> **工期**: 3 天
-> **目標**: 建立 Supabase 資料庫和 iOS SDK 整合
+> **Phase 原始工期**: 3 天 (24h)
+> **新增重構**: 2.5 天 (20h)
+> **總工期**: 5.5 天 (44h)
+> **目標**: 建立 Supabase 資料庫、iOS SDK 整合、Repository 層架構、依賴注入
 
 ### Task B.1: Supabase 專案設置 ✅
 
@@ -643,10 +645,493 @@ struct RawExhibition: Codable {
 
 ---
 
-## 📅 Phase C: 資料源整合
+### Task B.4: 建立 Repository 層架構 ✨ NEW
 
-> **工期**: 3 天
-> **目標**: 串接政府 API 和 Google Places API
+**優先級**: 🟡 中
+**工時**: 12 小時
+
+**目標**: 將 Firebase 直接調用替換為 Repository 模式，實現資料存取層抽象化
+
+**步驟**:
+
+1. **創建 ExhibitionRepository**
+
+**檔案**: `TaiwanArtion/Core/Repository/ExhibitionRepository.swift`
+
+```swift
+import Foundation
+
+// MARK: - Protocol
+protocol ExhibitionRepository {
+    func getExhibitions(limit: Int) async throws -> [Exhibition]
+    func getHotExhibitions(count: Int) async throws -> [Exhibition]
+    func getExhibitionById(_ id: UUID) async throws -> Exhibition
+    func searchExhibitions(keyword: String) async throws -> [Exhibition]
+    func getRecommendedExhibitions(for userId: String) async throws -> [Exhibition]
+}
+
+// MARK: - Supabase Implementation
+class SupabaseExhibitionRepository: ExhibitionRepository {
+    private let supabase = SupabaseClient.shared.client
+
+    func getExhibitions(limit: Int = 20) async throws -> [Exhibition] {
+        let response: [Exhibition] = try await supabase
+            .from("exhibitions")
+            .select()
+            .limit(limit)
+            .order("start_date", ascending: false)
+            .execute()
+            .value
+
+        AppLogger.info("取得 \(response.count) 筆展覽資料", category: .database)
+        return response
+    }
+
+    func getHotExhibitions(count: Int = 10) async throws -> [Exhibition] {
+        // 根據收藏數或瀏覽數排序 (未來實作)
+        return try await getExhibitions(limit: count)
+    }
+
+    func getExhibitionById(_ id: UUID) async throws -> Exhibition {
+        let response: [Exhibition] = try await supabase
+            .from("exhibitions")
+            .select()
+            .eq("id", value: id.uuidString)
+            .limit(1)
+            .execute()
+            .value
+
+        guard let exhibition = response.first else {
+            throw RepositoryError.notFound
+        }
+
+        return exhibition
+    }
+
+    func searchExhibitions(keyword: String) async throws -> [Exhibition] {
+        let response: [Exhibition] = try await supabase
+            .from("exhibitions")
+            .select()
+            .or("title.ilike.%\(keyword)%,description.ilike.%\(keyword)%")
+            .execute()
+            .value
+
+        return response
+    }
+
+    func getRecommendedExhibitions(for userId: String) async throws -> [Exhibition] {
+        // 從 user_recommendations 取得推薦 ID
+        let recommendations: [UserRecommendation] = try await supabase
+            .from("user_recommendations")
+            .select()
+            .eq("user_id", value: userId)
+            .single()
+            .execute()
+            .value
+
+        guard let recommendation = recommendations.first else {
+            return []
+        }
+
+        // 根據 ID 列表取得展覽
+        let response: [Exhibition] = try await supabase
+            .from("exhibitions")
+            .select()
+            .in("id", values: recommendation.exhibitionIds.map { $0.uuidString })
+            .execute()
+            .value
+
+        return response
+    }
+}
+
+// MARK: - Firebase Implementation (過渡期保留)
+class FirebaseExhibitionRepository: ExhibitionRepository {
+    private let db = Firestore.firestore()
+
+    func getExhibitions(limit: Int = 20) async throws -> [Exhibition] {
+        let snapshot = try await db.collection("exhibitions")
+            .limit(to: limit)
+            .order(by: "startDate", descending: true)
+            .getDocuments()
+
+        return snapshot.documents.compactMap { try? $0.data(as: Exhibition.self) }
+    }
+
+    // ... 其他方法實作
+}
+
+// MARK: - Errors
+enum RepositoryError: Error {
+    case notFound
+    case networkError
+    case invalidData
+}
+```
+
+2. **創建 UserRepository**
+
+**檔案**: `TaiwanArtion/Core/Repository/UserRepository.swift`
+
+```swift
+protocol UserRepository {
+    func getUser(id: String) async throws -> User
+    func updateUser(_ user: User) async throws
+    func getFavoriteExhibitions(userId: String) async throws -> [Exhibition]
+    func addFavorite(userId: String, exhibitionId: UUID) async throws
+    func removeFavorite(userId: String, exhibitionId: UUID) async throws
+}
+
+class SupabaseUserRepository: UserRepository {
+    private let supabase = SupabaseClient.shared.client
+
+    func getFavoriteExhibitions(userId: String) async throws -> [Exhibition] {
+        // 先取得收藏 ID
+        let favorites: [UserFavorite] = try await supabase
+            .from("user_favorites")
+            .select()
+            .eq("user_id", value: userId)
+            .execute()
+            .value
+
+        let exhibitionIds = favorites.map { $0.exhibitionId.uuidString }
+
+        // 再取得展覽資料
+        let response: [Exhibition] = try await supabase
+            .from("exhibitions")
+            .select()
+            .in("id", values: exhibitionIds)
+            .execute()
+            .value
+
+        return response
+    }
+
+    func addFavorite(userId: String, exhibitionId: UUID) async throws {
+        let favorite = UserFavorite(
+            id: UUID(),
+            userId: userId,
+            exhibitionId: exhibitionId,
+            createdAt: Date()
+        )
+
+        try await supabase
+            .from("user_favorites")
+            .insert(favorite)
+            .execute()
+
+        AppLogger.info("新增收藏: \(exhibitionId)", category: .database)
+    }
+
+    func removeFavorite(userId: String, exhibitionId: UUID) async throws {
+        try await supabase
+            .from("user_favorites")
+            .delete()
+            .eq("user_id", value: userId)
+            .eq("exhibition_id", value: exhibitionId.uuidString)
+            .execute()
+
+        AppLogger.info("移除收藏: \(exhibitionId)", category: .database)
+    }
+
+    // ... 其他方法
+}
+```
+
+3. **創建 VenueRepository**
+
+**檔案**: `TaiwanArtion/Core/Repository/VenueRepository.swift`
+
+```swift
+protocol VenueRepository {
+    func getVenues() async throws -> [Venue]
+    func getVenueById(_ id: UUID) async throws -> Venue
+    func getNearbyVenues(latitude: Double, longitude: Double, radius: Double) async throws -> [Venue]
+}
+
+class SupabaseVenueRepository: VenueRepository {
+    private let supabase = SupabaseClient.shared.client
+
+    func getVenues() async throws -> [Venue] {
+        let response: [Venue] = try await supabase
+            .from("venues")
+            .select()
+            .execute()
+            .value
+
+        return response
+    }
+
+    func getVenueById(_ id: UUID) async throws -> Venue {
+        let response: [Venue] = try await supabase
+            .from("venues")
+            .select()
+            .eq("id", value: id.uuidString)
+            .single()
+            .execute()
+            .value
+
+        guard let venue = response.first else {
+            throw RepositoryError.notFound
+        }
+
+        return venue
+    }
+
+    // 未來可用 PostGIS 擴展實作地理查詢
+    func getNearbyVenues(latitude: Double, longitude: Double, radius: Double) async throws -> [Venue] {
+        // 簡化版：取得所有場館後在客戶端計算距離
+        let allVenues = try await getVenues()
+
+        return allVenues.filter { venue in
+            guard let venueLat = venue.latitude,
+                  let venueLon = venue.longitude else {
+                return false
+            }
+
+            let distance = calculateDistance(
+                lat1: latitude, lon1: longitude,
+                lat2: venueLat, lon2: venueLon
+            )
+
+            return distance <= radius
+        }
+    }
+
+    private func calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double) -> Double {
+        // Haversine 公式計算距離（公里）
+        let earthRadius = 6371.0
+
+        let dLat = (lat2 - lat1) * .pi / 180
+        let dLon = (lon2 - lon1) * .pi / 180
+
+        let a = sin(dLat / 2) * sin(dLat / 2) +
+                cos(lat1 * .pi / 180) * cos(lat2 * .pi / 180) *
+                sin(dLon / 2) * sin(dLon / 2)
+
+        let c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+        return earthRadius * c
+    }
+}
+```
+
+**修改範圍**:
+- HomeViewModel.swift - 替換 FirebaseDatabase 為 ExhibitionRepository
+- CollectViewModel.swift - 替換為 UserRepository
+- NearViewModel.swift - 替換為 VenueRepository
+- ExhibitionCardViewModel.swift - 替換為 ExhibitionRepository
+
+**成功標準**:
+- [ ] 3 個 Repository Protocol 定義完成
+- [ ] Supabase 實作完成
+- [ ] Firebase 實作保留（過渡期）
+- [ ] RepositoryError 定義完成
+
+**好處**:
+- ✅ 統一資料存取介面
+- ✅ 可輕鬆切換 Firebase ↔ Supabase
+- ✅ 可測試性大幅提升
+- ✅ 業務邏輯與資料來源解耦
+
+---
+
+### Task B.5: 依賴注入容器 ✨ NEW
+
+**優先級**: 🟡 中
+**工時**: 8 小時
+
+**目標**: 移除 Singleton 模式，使用依賴注入提升可測試性和程式碼品質
+
+**步驟**:
+
+1. **創建 DIContainer**
+
+**檔案**: `TaiwanArtion/Core/DI/DIContainer.swift`
+
+```swift
+import Foundation
+
+class DIContainer {
+    static let shared = DIContainer()
+
+    private init() {}
+
+    // MARK: - Repositories
+    lazy var authRepository: AuthRepository = {
+        // 未來可根據 AppConfig 切換實作
+        return FirebaseAuthRepository()
+    }()
+
+    lazy var exhibitionRepository: ExhibitionRepository = {
+        #if DEBUG
+        // 開發環境可使用 Firebase
+        return FirebaseExhibitionRepository()
+        #else
+        // 正式環境使用 Supabase
+        return SupabaseExhibitionRepository()
+        #endif
+    }()
+
+    lazy var userRepository: UserRepository = {
+        return SupabaseUserRepository()
+    }()
+
+    lazy var venueRepository: VenueRepository = {
+        return SupabaseVenueRepository()
+    }()
+
+    // MARK: - Services
+    lazy var aiService: AIProcessingService = {
+        return AIProcessingService(apiKey: AppConfig.claudeAPIKey)
+    }()
+
+    lazy var governmentAPIService: GovernmentAPIService = {
+        return GovernmentAPIService()
+    }()
+
+    lazy var googlePlacesService: GooglePlacesService = {
+        return GooglePlacesService(apiKey: AppConfig.googlePlacesKey)
+    }()
+
+    // MARK: - ViewModels Factory Methods
+    func makeHomeViewModel() -> HomeViewModel {
+        return HomeViewModel(
+            exhibitionRepository: exhibitionRepository,
+            userRepository: userRepository
+        )
+    }
+
+    func makeLoginViewModel() -> LoginViewModel {
+        return LoginViewModel(authRepository: authRepository)
+    }
+
+    func makeRegisterViewModel() -> RegisterViewModel {
+        return RegisterViewModel(authRepository: authRepository)
+    }
+
+    func makeCollectViewModel() -> CollectViewModel {
+        return CollectViewModel(
+            userRepository: userRepository,
+            exhibitionRepository: exhibitionRepository
+        )
+    }
+
+    func makeExhibitionDetailViewModel(exhibitionId: UUID) -> ExhibitionDetailViewModel {
+        return ExhibitionDetailViewModel(
+            exhibitionId: exhibitionId,
+            exhibitionRepository: exhibitionRepository,
+            userRepository: userRepository
+        )
+    }
+
+    func makeNearViewModel() -> NearViewModel {
+        return NearViewModel(
+            venueRepository: venueRepository,
+            exhibitionRepository: exhibitionRepository
+        )
+    }
+}
+```
+
+2. **修改 ViewModels 移除 Singleton**
+
+**範例**: HomeViewModel.swift
+
+```swift
+// BEFORE (Singleton):
+class HomeViewModel {
+    static let shared = HomeViewModel()
+    private let db = Firestore.firestore()
+
+    private init() {}
+}
+
+// AFTER (依賴注入):
+class HomeViewModel {
+    // MARK: - Dependencies
+    private let exhibitionRepository: ExhibitionRepository
+    private let userRepository: UserRepository
+
+    // MARK: - Init
+    init(
+        exhibitionRepository: ExhibitionRepository,
+        userRepository: UserRepository
+    ) {
+        self.exhibitionRepository = exhibitionRepository
+        self.userRepository = userRepository
+    }
+
+    // MARK: - Methods
+    func loadExhibitions() async {
+        do {
+            let exhibitions = try await exhibitionRepository.getExhibitions(limit: 20)
+            // 處理資料...
+        } catch {
+            AppLogger.error("載入展覽失敗: \(error)", category: .viewModel)
+        }
+    }
+}
+```
+
+3. **修改 ViewControllers 使用 DI**
+
+**範例**: HomeViewController.swift
+
+```swift
+// BEFORE (Singleton):
+class HomeViewController: UIViewController {
+    let viewModel = HomeViewModel.shared
+}
+
+// AFTER (依賴注入):
+class HomeViewController: UIViewController {
+    let viewModel: HomeViewModel
+
+    init(viewModel: HomeViewModel = DIContainer.shared.makeHomeViewModel()) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        self.viewModel = DIContainer.shared.makeHomeViewModel()
+        super.init(coder: coder)
+    }
+}
+```
+
+**修改範圍**:
+- 6 個 ViewModel (移除 .shared)
+  - HomeViewModel
+  - LoginViewModel
+  - RegisterViewModel
+  - CollectViewModel
+  - ExhibitionDetailViewModel
+  - NearViewModel
+
+- 對應的 19 個 ViewController (使用 DI)
+
+**成功標準**:
+- [ ] DIContainer 創建完成
+- [ ] 所有 Repository 通過 DI 注入
+- [ ] 所有 ViewModel 移除 Singleton
+- [ ] 所有 ViewController 使用工廠方法
+- [ ] 編譯通過無錯誤
+
+**好處**:
+- ✅ 可測試性：可輕鬆注入 Mock Repository
+- ✅ 靈活性：可根據環境切換實作
+- ✅ 解耦：ViewModel 不依賴具體實作
+- ✅ 可維護性：依賴關係清晰明確
+
+---
+
+## 📅 Phase C: 資料源整合 + ViewModel 重構
+
+> **Phase 原始工期**: 3 天 (24h)
+> **新增重構**: 3 天 (25h)
+> **總工期**: 6 天 (49h)
+> **目標**: 串接政府 API、Google Places API、重構 ViewModel (Input/Output 模式)、修復 RxSwift 記憶體洩漏
 
 ### Task C.1: 政府開放資料 API 整合 ✅
 
@@ -1038,10 +1523,12 @@ class DataSyncService {
 
 ---
 
-## 📅 Phase D: AI 推薦引擎
+## 📅 Phase D: AI 推薦引擎 + UI 重構
 
-> **工期**: 3 天
-> **目標**: 實作 Claude AI 推薦系統 (最省錢方案)
+> **Phase 原始工期**: 3 天 (24h)
+> **新增重構**: 4 天 (32h)
+> **總工期**: 7 天 (56h)
+> **目標**: Claude AI 推薦系統、推薦快取系統、分解大型 ViewController、BaseCollectionViewCell 實作
 
 ### Task D.1: Claude API 服務 ✅
 
@@ -1468,10 +1955,12 @@ struct UserFavorite: Codable, Identifiable {
 
 ---
 
-## 📅 Phase E: 省錢優化
+## 📅 Phase E: 省錢優化 + 效能重構
 
-> **工期**: 2 天
-> **目標**: 實作所有成本優化策略
+> **Phase 原始工期**: 2 天 (16h)
+> **新增重構**: 2 天 (16h)
+> **總工期**: 4 天 (32h)
+> **目標**: 批次處理、成本監控、圖片載入優化、高度快取、代碼去重
 
 ### Task E.1: 批次推薦處理 ✅
 
@@ -1700,10 +2189,12 @@ CostMonitor.shared.recordGoogleAPIRequest(estimatedCost: 0.017)
 
 ---
 
-## 📅 Phase F: 測試與上線
+## 📅 Phase F: 測試與上線 + 最終重構
 
-> **工期**: 2 天
-> **目標**: 完整測試並準備上線
+> **Phase 原始工期**: 2 天 (16h)
+> **新增重構**: 1.5 天 (13h)
+> **總工期**: 3.5 天 (29h)
+> **目標**: 完整測試、效能優化、程式碼品質檢查、上線準備
 
 ### Task F.1: 完整功能測試 ✅
 
