@@ -186,14 +186,14 @@ class UserManager: UserInputOutputType, UserManagerInput, UserManagerOutput {
         .disposed(by: disposeBag)
         
         saveDataSubject.subscribe(onNext: {
-            print("Save!")
+            AppLogger.debug("儲存使用者資料", category: .auth)
             self.uploadUserInfoToFireBase()
         })
         .disposed(by: disposeBag)
-        
+
         googleLoginSubject.subscribe(onNext: { controller in
             self.googleLogin(controller: controller) { isLogin in
-                print("isGoogleLogin Result:\(isLogin)")
+                AppLogger.debug("Google 登入結果: \(isLogin)", category: .auth)
             }
         })
         .disposed(by: disposeBag)
@@ -289,9 +289,9 @@ class UserManager: UserInputOutputType, UserManagerInput, UserManagerOutput {
                              "username" : self.userDefaultInterface.getUsername()]
         fireBaseDataBase.createDocument(data: storeUserInfo) { documentID, error in
             if let error = error {
-                print("上傳使用者資訊Error:\(error.localizedDescription)")
+                AppLogger.error("上傳使用者資訊失敗", category: .auth, error: error)
             }
-            print("documentID:\(documentID)")
+            AppLogger.info("使用者文件 ID: \(documentID ?? "nil")", category: .auth)
             self.userDefaultInterface.setDocumentID(identifier: documentID ?? "未知的ID")
         }
     }
@@ -299,7 +299,7 @@ class UserManager: UserInputOutputType, UserManagerInput, UserManagerOutput {
     private func readUserInfoFromFireBase(documentID: String, completion: @escaping (User) -> Void) {
         fireBaseDataBase.readDocument(documentID: documentID) { data, error in
             if let error = error {
-                print("error:\(error)")
+                AppLogger.error("讀取使用者資料失敗", category: .auth, error: error)
             } else if let data = data {
                 guard let name = data["username"] as? String,
                       let birth = data["birth"] as? String,

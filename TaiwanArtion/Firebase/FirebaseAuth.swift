@@ -37,7 +37,6 @@ class FirebaseAuth {
                 AppLogger.logAuthentication(
                     action: "Google Sign In",
                     provider: "Google",
-                    userID: result.user.userID,
                     success: true
                 )
                 AppLogger.debug(
@@ -79,7 +78,7 @@ class FirebaseAuth {
                 AppLogger.error("Firebase 登入發生錯誤", category: .auth, error: error)
                 return
             }
-            AppLogger.info("使用者成功登入：\(authResult?.user.displayName ?? "未知使用者")", category: .auth)
+            AppLogger.debug("使用者成功登入", category: .auth)
             isLogginCompletion((authResult?.user.isEmailVerified)!)
         }
     }
@@ -87,6 +86,7 @@ class FirebaseAuth {
     //GoogleSignOut
     func googleSignOut() {
         GIDSignIn.sharedInstance.signOut()
+        UserDefaultInterface.shared.clearSensitiveData()
     }
     
     //Facebook登入
@@ -103,7 +103,6 @@ class FirebaseAuth {
                             AppLogger.logAuthentication(
                                 action: "Facebook Sign In",
                                 provider: "Facebook",
-                                userID: profile.userID,
                                 success: true
                             )
                             AppLogger.debug(
@@ -141,7 +140,6 @@ class FirebaseAuth {
                 AppLogger.logAuthentication(
                     action: "Normal Sign Up",
                     provider: "Email",
-                    userID: result.user.uid,
                     success: true
                 )
                 AppLogger.debug(
@@ -173,7 +171,6 @@ class FirebaseAuth {
                 AppLogger.logAuthentication(
                     action: "Normal Login",
                     provider: "Email",
-                    userID: result.user.uid,
                     success: true
                 )
                 AppLogger.debug(
@@ -203,16 +200,16 @@ class FirebaseAuth {
                 return
             }
             if let verificationID = verificationID {
-                AppLogger.info("驗證碼已發送，verificationID: \(verificationID)", category: .auth)
-                // 將 verificationID 儲存起來，稍後用於驗證碼確認
-                UserDefaults.standard.set(verificationID, forKey: "authVerificationID")
+                AppLogger.debug("驗證碼已發送", category: .auth)
+                // 將 verificationID 安全儲存至 Keychain
+                KeychainManager.shared.save(key: "com.taiwanartion.authVerificationID", value: verificationID)
             }
         }
     }
     
     func verifyMessengeCode(byVerifyCode code: String, completion: @escaping (String) -> Void) {
         // 在某個按鈕點擊事件中處理
-        let verificationID = UserDefaults.standard.string(forKey: "authVerificationID")
+        let verificationID = KeychainManager.shared.get(key: "com.taiwanartion.authVerificationID")
         let verificationCode = code // 使用者輸入的驗證碼
 
         let credential = PhoneAuthProvider.provider().credential(

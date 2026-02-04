@@ -67,7 +67,8 @@ class RegisterViewController: UIViewController {
         case .phoneVerify:
             firstStepView = PhoneVerifyView()
             layoutViews(parentView: registerView.containerView, childView: firstStepView!)
-            firstStepView?.toNextStep = {
+            firstStepView?.toNextStep = { [weak self] in
+                guard let self = self else { return }
                 self.viewModel.setCurrentStep(step: .acountPassword)
                 self.firstStepView?.removeFromSuperview()
                 self.registerView.stepCollectionView.reloadData()
@@ -76,7 +77,8 @@ class RegisterViewController: UIViewController {
         case .acountPassword:
             secondStepView = AccountPasswordView()
             layoutViews(parentView: registerView.containerView, childView: secondStepView!)
-            secondStepView?.toNextStep = {
+            secondStepView?.toNextStep = { [weak self] in
+                guard let self = self else { return }
                 self.viewModel.setCurrentStep(step: .emailVerify)
                 self.secondStepView?.removeFromSuperview()
                 self.registerView.stepCollectionView.reloadData()
@@ -85,15 +87,16 @@ class RegisterViewController: UIViewController {
         case .emailVerify:
             thirdStepView = EmailVerifyView()
             layoutViews(parentView: registerView.containerView, childView: thirdStepView!)
-            thirdStepView?.toNextStep = {
+            thirdStepView?.toNextStep = { [weak self] in
+                guard let self = self else { return }
                 let registerSucceedViewController = RegisterSucceedViewController()
                 let personInfoViewController = PersonalInfoViewController()
                 registerSucceedViewController.modalPresentationStyle = .overFullScreen
-                registerSucceedViewController.pushToControllerAction = {
-                    self.navigationController?.pushViewController(personInfoViewController, animated: true)
+                registerSucceedViewController.pushToControllerAction = { [weak self] in
+                    self?.navigationController?.pushViewController(personInfoViewController, animated: true)
                 }
-                registerSucceedViewController.popViewControllerAction = {
-                    self.navigationController?.popViewController(animated: true)
+                registerSucceedViewController.popViewControllerAction = { [weak self] in
+                    self?.navigationController?.popViewController(animated: true)
                 }
                 self.present(registerSucceedViewController, animated: true)
                 self.thirdStepView?.removeFromSuperview()
@@ -104,26 +107,23 @@ class RegisterViewController: UIViewController {
     }
     
     private func setInputInfo() {
-        firstStepView?.changedPhoneText = { changedText in
-            //1. 檢查輸入的號碼(需要客製)
-                ///a.如果沒有輸入正確的號碼會跳PopUp提示
-            print("changedText:\(changedText)")
-            //2.FireBaseAuth
+        firstStepView?.changedPhoneText = { [weak self] changedText in
+            guard let self = self else { return }
+            AppLogger.debug("電話號碼輸入中", category: .ui)
             self.viewModel.input.inputPhoneNumberRelay.accept(changedText)
         }
         //發送認證碼給手機門號
-        firstStepView?.toSendVerifyCode = {
-            self.viewModel.input.inputSendVerifyCodeActionSubject.onNext(())
+        firstStepView?.toSendVerifyCode = { [weak self] in
+            self?.viewModel.input.inputSendVerifyCodeActionSubject.onNext(())
         }
         //驗證驗證碼
-        firstStepView?.toVerifiedMessengeCode = {
-            self.viewModel.input.inputCheckVerifyCodeSubject.onNext(())
+        firstStepView?.toVerifiedMessengeCode = { [weak self] in
+            self?.viewModel.input.inputCheckVerifyCodeSubject.onNext(())
         }
         //接收驗證碼
-        firstStepView?.toVerifyChangedCode = { verifyCode in
-            self.viewModel.input.inputMessengeVerifyCodeRelay.accept(verifyCode)
+        firstStepView?.toVerifyChangedCode = { [weak self] verifyCode in
+            self?.viewModel.input.inputMessengeVerifyCodeRelay.accept(verifyCode)
         }
-        
     }
 }
 extension RegisterViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {

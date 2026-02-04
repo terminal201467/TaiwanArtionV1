@@ -94,7 +94,7 @@ class RegisterViewModel: RegisterInputOutputType, RegisterViewModelInput, Regist
     
     private var storePhoneNumber: String = "" {
         didSet {
-            print("storePhoneNumber:\(storePhoneNumber)")
+            AppLogger.debug("電話號碼已更新 (長度: \(storePhoneNumber.count))", category: .viewModel)
         }
     }
     
@@ -116,7 +116,7 @@ class RegisterViewModel: RegisterInputOutputType, RegisterViewModelInput, Regist
         .disposed(by: disposeBag)
         
         inputReSendVerifyCodeSubject.subscribe(onNext: {
-            print("ReSend!")
+            AppLogger.debug("ReSend!", category: .viewModel)
         })
         .disposed(by: disposeBag)
         
@@ -138,7 +138,7 @@ class RegisterViewModel: RegisterInputOutputType, RegisterViewModelInput, Regist
     
     func setCurrentStep(step: RegisterStep) {
         currentStep = step
-        print("currentStep:\(currentStep)")
+        AppLogger.debug("currentStep:\(currentStep)", category: .viewModel)
     }
     
     //MARK: -StepCollectionView

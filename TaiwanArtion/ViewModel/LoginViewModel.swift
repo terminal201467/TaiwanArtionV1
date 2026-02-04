@@ -82,26 +82,24 @@ class LoginViewModel: NormalLoginInput, NormalLoginOutput, NormalLoginViewModelT
     var output: NormalLoginOutput { self }
     
     init() {
-        accountInput.subscribe(onNext: { text in
-            print("帳號輸入:\(text)")
-            //檢查帳號
-//            self.accountValidation = Signal.just(self.checkAccount(input: text))
+        accountInput.subscribe(onNext: { [weak self] text in
+            guard self != nil else { return }
+            AppLogger.debug("帳號輸入中", category: .viewModel)
         }).disposed(by: disposeBag)
-        
-        passwordInput.subscribe(onNext: { text in
-            print("密碼輸入:\(text)")
-            //檢查密碼
-//            self.passwordValidSuccess = Signal.just(self.checkPassword(input: text))
+
+        passwordInput.subscribe(onNext: { [weak self] _ in
+            guard self != nil else { return }
+            AppLogger.debug("密碼輸入中", category: .viewModel)
         }).disposed(by: disposeBag)
-        
-        toPrevented.subscribe(onNext: { toPrevented in
-            
-            //容許密碼可見、不可見
-            
+
+        toPrevented.subscribe(onNext: { [weak self] toPrevented in
+            guard self != nil else { return }
         }).disposed(by: disposeBag)
-        
-        loginActionSubject.subscribe(onNext: {
-            self.firebaseAuth.normalLogin(email: self.accountInput.value, password: self.passwordInput.value) { user in
+
+        loginActionSubject.subscribe(onNext: { [weak self] in
+            guard let self = self else { return }
+            self.firebaseAuth.normalLogin(email: self.accountInput.value, password: self.passwordInput.value) { [weak self] user in
+                guard let self = self else { return }
                 self.userDefaultInterface.setUsername(user.name)
                 self.userDefaultInterface.setGender(user.gender)
                 self.userDefaultInterface.setBirth(user.birth)
