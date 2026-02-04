@@ -96,16 +96,22 @@ class CollectViewModel: CollectInputOutputType, CollectInput, CollectOutput {
     var collectNewsSearchHistory: RxRelay.BehaviorRelay<[String]> = BehaviorRelay(value: [])
     
     
-    //MARK: -Firebase
-    
-    private let firebase = FirebaseDatabase(collectionName: "exhibitions")
-    
+    //MARK: -Repository
+
+    private let exhibitionRepository: ExhibitionRepository
+    private let newsRepository: NewsRepository
+
     //MARK: -input、output
     var input: CollectInput { self }
     var output: CollectOutput { self }
     
     //MARK: -Initialization
-    init() {
+    init(
+        exhibitionRepository: ExhibitionRepository = FirebaseExhibitionRepository(),
+        newsRepository: NewsRepository = FirebaseNewsRepository()
+    ) {
+        self.exhibitionRepository = exhibitionRepository
+        self.newsRepository = newsRepository
         AppLogger.enter(category: .viewModel)
 
         fetchFirebaseCollectData(by: 10) { infos in
@@ -120,30 +126,14 @@ class CollectViewModel: CollectInputOutputType, CollectInput, CollectOutput {
         AppLogger.exit(category: .viewModel)
     }
     
-    //向firebase拿資料，藉由全部展覽、今天開始、明天開始、本週開始等四個頁籤去filter要拿取的資料
+    //向 Repository 拿資料，藉由全部展覽、今天開始、明天開始、本週開始等四個頁籤去filter要拿取的資料
     private func fetchFirebaseCollectData(by count: Int, completion: @escaping (([ExhibitionInfo]) -> Void)) {
-        firebase.getHotDocument(count: count) { data, error in
-            if let error = error {
+        exhibitionRepository.getHotExhibitions(count: count) { result in
+            switch result {
+            case .success(let exhibitions):
+                completion(exhibitions)
+            case .failure(let error):
                 AppLogger.error("獲取熱門展覽失敗", category: .viewModel, error: error)
-            } else if let data = data {
-                var info: [ExhibitionInfo] = []
-                data.map { detailData in
-                    guard let title = detailData["title"] as? String,
-                          let image = detailData["imageUrl"] as? String,
-                          let dateString = detailData["startDate"] as? String,
-                          let agency = detailData["subUnit"] as? [String],
-                          let official = detailData["showUnit"] as? String,
-                          let showInfo = detailData["showInfo"] as? [[String: Any]],
-                          let price = showInfo.first?["price"] as? String,
-                          let time = showInfo.first?["time"] as? String,
-                          let latitude = showInfo.first?["latitude"] as? String,
-                          let longitude = showInfo.first?["longitude"] as? String,
-                          let location = showInfo.first?["locationName"] as? String,
-                          let address = showInfo.first?["location"] as? String else { return }
-                    let exhibition = ExhibitionInfo(title: title, image: image == "" ? "defaultExhibition" : image , tag: "一般", dateString: dateString, time: time, agency: agency.map{$0}.joined(), official: official, telephone: "", advanceTicketPrice: price, unanimousVotePrice: price, studentPrice: price, groupPrice: price, lovePrice: price, free: "", earlyBirdPrice: "", city: String(location.prefix(3)), location: location, address: address, latitude: latitude, longtitude: longitude)
-                    info.append(exhibition)
-                }
-                completion(info)
             }
         }
     }
@@ -184,7 +174,7 @@ class CollectViewModel: CollectInputOutputType, CollectInput, CollectOutput {
         AppLogger.exit(category: .viewModel)
     }
     
-    /// 向firebase fetch收藏的新聞資料
+    /// 向 Repository fetch收藏的新聞資料
     /// - Parameters:
     ///   - userID: 使用者 ID
     ///   - completion: 完成回調，返回新聞陣列
@@ -211,48 +201,20 @@ class CollectViewModel: CollectInputOutputType, CollectInput, CollectOutput {
 
             AppLogger.info("找到 \(newsIDs.count) 個收藏新聞 ID", category: .viewModel)
 
-            let newsFirebase = FirebaseDatabase(collectionName: "news")
-            var newsList: [News] = []
-            let dispatchGroup = DispatchGroup()
-
-            for newsID in newsIDs {
-                dispatchGroup.enter()
-                newsFirebase.readDocument(documentID: newsID) { newsData, error in
-                    defer { dispatchGroup.leave() }
-
-                    if let error = error {
-                        AppLogger.error("獲取新聞失敗: \(newsID)", category: .viewModel, error: error)
-                        return
-                    }
-
-                    if let newsData = newsData,
-                       let id = newsData["id"] as? String,
-                       let title = newsData["title"] as? String,
-                       let date = newsData["date"] as? String,
-                       let author = newsData["author"] as? String,
-                       let image = newsData["image"] as? String,
-                       let description = newsData["description"] as? String {
-                        let news = News(
-                            id: id,
-                            title: title,
-                            date: date,
-                            author: author,
-                            image: image,
-                            description: description
-                        )
-                        newsList.append(news)
-                    }
+            self.newsRepository.getNews(byIDs: newsIDs) { result in
+                switch result {
+                case .success(let newsList):
+                    AppLogger.logViewModelEvent(
+                        viewModel: "CollectViewModel",
+                        event: "FetchNewsData",
+                        data: ["count": newsList.count]
+                    )
+                    self.collectNews.accept(newsList)
+                    completion(newsList)
+                case .failure(let error):
+                    AppLogger.error("獲取新聞失敗", category: .viewModel, error: error)
+                    completion([])
                 }
-            }
-
-            dispatchGroup.notify(queue: .main) {
-                AppLogger.logViewModelEvent(
-                    viewModel: "CollectViewModel",
-                    event: "FetchNewsData",
-                    data: ["count": newsList.count]
-                )
-                self.collectNews.accept(newsList)
-                completion(newsList)
             }
         }
 

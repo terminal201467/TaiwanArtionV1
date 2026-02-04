@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import FirebaseCore
-import FirebaseFirestore
 import RxSwift
 import RxCocoa
 import RxRelay
@@ -62,12 +60,12 @@ class HomeViewModel: HomeViewModelType, HomeViewModelInput, HomeViewModelOutput 
     
     //Singleton
     static let shared = HomeViewModel()
-    
+
     private let disposeBag = DisposeBag()
-    
+
     //MARK: - Input、Output
     var inputs: HomeViewModelInput { self }
-    
+
     var outputs: HomeViewModelOutput { self }
     
     //MARK: - Store
@@ -95,7 +93,12 @@ class HomeViewModel: HomeViewModelType, HomeViewModelInput, HomeViewModelOutput 
     var items: Observable<Items> { currenItemSubject.asObservable() }
     
     //MARK: - Intialization
-    public init() {
+    public init(
+        exhibitionRepository: ExhibitionRepository = FirebaseExhibitionRepository(),
+        newsRepository: NewsRepository = FirebaseNewsRepository()
+    ) {
+        self.exhibitionRepository = exhibitionRepository
+        self.newsRepository = newsRepository
         //input
         monthSelected
             .subscribe(onNext: { indexPath in
@@ -147,7 +150,7 @@ class HomeViewModel: HomeViewModelType, HomeViewModelInput, HomeViewModelOutput 
                 self.fetchRecentExhibition(count: 10) { info in
                     self.allExhibitionRelay.accept(info)
                 }
-            case .none: print("none")
+            case .none: AppLogger.debug("none", category: .viewModel)
             }
         })
         .disposed(by: disposeBag)
@@ -157,128 +160,64 @@ class HomeViewModel: HomeViewModelType, HomeViewModelInput, HomeViewModelOutput 
         }
     }
     
-    //MARK: - Firebase
-    
-    private let exhibitionDataBase = FirebaseDatabase(collectionName: "exhibitions")
-    
-    private let newsDataBase = FirebaseDatabase(collectionName: "news")
+    //MARK: - Repository
+
+    private let exhibitionRepository: ExhibitionRepository
+    private let newsRepository: NewsRepository
 
     func fetchDateKind(by month: Month) {
-        exhibitionDataBase.readDocument(month: month.numberText) { data, error in
-            if let error = error {
-                print("error: \(error)")
-            } else if data != nil{
-                print("data:\(data)")
+        exhibitionRepository.getExhibitions(month: month.numberText) { result in
+            switch result {
+            case .success(let exhibitions):
+                AppLogger.debug("data: \(exhibitions.count) exhibitions", category: .viewModel)
+            case .failure(let error):
+                AppLogger.error("error: \(error)", category: .viewModel)
             }
         }
     }
     
-    //MARK: - Firebase fetch Method
+    //MARK: - Fetch Methods
     
     func fetchDataRecentExhibition(by count: Int, completion: @escaping (([ExhibitionInfo]) -> Void)) {
-        exhibitionDataBase.getRandomDocuments(count: count) { data, error in
-            if let error = error {
-                print("error:\(error)")
-            } else if let data = data {
-                var info: [ExhibitionInfo] = []
-                data.map { detailData in
-                    guard let title = detailData["title"] as? String,
-                          let image = detailData["imageUrl"] as? String,
-                          let dateString = detailData["startDate"] as? String,
-                          let agency = detailData["subUnit"] as? [String],
-                          let official = detailData["showUnit"] as? String,
-                          let showInfo = detailData["showInfo"] as? [[String: Any]],
-                          let price = showInfo.first?["price"] as? String,
-                          let time = showInfo.first?["time"] as? String,
-                          let latitude = showInfo.first?["latitude"] as? String,
-                          let longitude = showInfo.first?["longitude"] as? String,
-                          let location = showInfo.first?["locationName"] as? String,
-                          let address = showInfo.first?["location"] as? String else { return }
-                    //這邊的image需要設計沒有相關圖片的圖
-                    //分類的部分都會先給定一般
-                    let exhibition = ExhibitionInfo(title: title, image: image == "" ? "defaultExhibition" : image , tag: "一般", dateString: dateString, time: time, agency: agency.map{$0}.joined(), official: official, telephone: "", advanceTicketPrice: price, unanimousVotePrice: price, studentPrice: price, groupPrice: price, lovePrice: price, free: "", earlyBirdPrice: "", city: String(location.prefix(3)), location: location, address: address, latitude: latitude, longtitude: longitude)
-                    info.append(exhibition)
-                }
-                completion(info)
+        exhibitionRepository.getRandomExhibitions(count: count) { result in
+            switch result {
+            case .success(let exhibitions):
+                completion(exhibitions)
+            case .failure(let error):
+                AppLogger.error("error:\(error)", category: .viewModel)
             }
         }
     }
     
     func fetchDataHotExhibition(by count: Int, completion: @escaping (([ExhibitionInfo]) -> Void)) {
-        exhibitionDataBase.getHotDocument(count: count) { data, error in
-            if let error = error {
-                print("error:\(error)")
-            } else if let data = data {
-                var info: [ExhibitionInfo] = []
-                data.map { detailData in
-                    guard let title = detailData["title"] as? String,
-                          let image = detailData["imageUrl"] as? String,
-                          let dateString = detailData["startDate"] as? String,
-                          let agency = detailData["subUnit"] as? [String],
-                          let official = detailData["showUnit"] as? String,
-                          let showInfo = detailData["showInfo"] as? [[String: Any]],
-                          let price = showInfo.first?["price"] as? String,
-                          let time = showInfo.first?["time"] as? String,
-                          let latitude = showInfo.first?["latitude"] as? String,
-                          let longitude = showInfo.first?["longitude"] as? String,
-                          let location = showInfo.first?["locationName"] as? String,
-                          let address = showInfo.first?["location"] as? String else { return }
-                    let exhibition = ExhibitionInfo(title: title, image: image == "" ? "defaultExhibition" : image , tag: "一般", dateString: dateString, time: time, agency: agency.map{$0}.joined(), official: official, telephone: "", advanceTicketPrice: price, unanimousVotePrice: price, studentPrice: price, groupPrice: price, lovePrice: price, free: "", earlyBirdPrice: "", city: String(location.prefix(3)), location: location, address: address, latitude: latitude, longtitude: longitude)
-                    info.append(exhibition)
-                }
-                completion(info)
+        exhibitionRepository.getHotExhibitions(count: count) { result in
+            switch result {
+            case .success(let exhibitions):
+                completion(exhibitions)
+            case .failure(let error):
+                AppLogger.error("error:\(error)", category: .viewModel)
             }
         }
     }
     
     func fetchDataNewsExhibition(count: Int, completion: @escaping (([News]) -> Void)) {
-        newsDataBase.getRandomDocuments(count: count) { data, error in
-            if let error = error {
-                print("error:\(error)")
-            } else if let data = data {
-                var info: [News] = []
-                data.map { newsData in
-                    guard let title = newsData["title"] as? String,
-                          let image = newsData["image"] as? String,
-                          let date = newsData["date"] as? String,
-                          let description = newsData["description"] as? String,
-                          let id = newsData["id"] as? String,
-                          let author = newsData["author"] as? String else { return }
-                    //這邊的image需要設計沒有相關圖片的圖
-                    //分類的部分都會先給定一般
-                    let news = News(id: id, title: title, date: date, author: author, image: image == "" ? "defaultExhibition" : image, description: description)
-                    info.append(news)
-                }
-                completion(info)
+        newsRepository.getRandomNews(count: count) { result in
+            switch result {
+            case .success(let newsList):
+                completion(newsList)
+            case .failure(let error):
+                AppLogger.error("error:\(error)", category: .viewModel)
             }
         }
     }
     
     func fetchRecentExhibition(count: Int, completion: @escaping (([ExhibitionInfo]) -> Void)) {
-        exhibitionDataBase.getRecentDocuments(count: count) { data, error in
-            if let error = error {
-                print("error:\(error)")
-            } else if let data = data {
-                var info: [ExhibitionInfo] = []
-                data.map { detailData in
-                    guard let title = detailData["title"] as? String,
-                          let image = detailData["imageUrl"] as? String,
-                          let dateString = detailData["startDate"] as? String,
-                          let agency = detailData["subUnit"] as? [String],
-                          let official = detailData["showUnit"] as? String,
-                          let showInfo = detailData["showInfo"] as? [[String: Any]],
-                          let price = showInfo.first?["price"] as? String,
-                          let time = showInfo.first?["time"] as? String,
-                          let latitude = showInfo.first?["latitude"] as? String,
-                          let longitude = showInfo.first?["longitude"] as? String,
-                          let location = showInfo.first?["locationName"] as? String,
-                          let address = showInfo.first?["location"] as? String else { return }
-                    //這邊的image需要設計沒有相關圖片的圖
-                    //分類的部分都會先給定一般
-                    let exhibition = ExhibitionInfo(title: title, image: image == "" ? "defaultExhibition" : image , tag: "一般", dateString: dateString, time: time, agency: agency.map{$0}.joined(), official: official, telephone: "", advanceTicketPrice: price, unanimousVotePrice: price, studentPrice: price, groupPrice: price, lovePrice: price, free: "", earlyBirdPrice: "", city: String(location.prefix(3)), location: location, address: address, latitude: latitude, longtitude: longitude)
-                    info.append(exhibition)
-                }
-                completion(info)
+        exhibitionRepository.getRecentExhibitions(count: count) { result in
+            switch result {
+            case .success(let exhibitions):
+                completion(exhibitions)
+            case .failure(let error):
+                AppLogger.error("error:\(error)", category: .viewModel)
             }
         }
     }

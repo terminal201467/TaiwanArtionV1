@@ -91,13 +91,13 @@ class NearViewModel: NearInputOutputType, NearViewModelInput, NearViewModelOutpu
     
     private let locationInterface = LocationInterface.shared
     
-    //MARK: -Firebase
-    
-    private let firebaseDatabase = FirebaseDatabase(collectionName: "exhibitions")
-    
+    //MARK: -Repository
+
+    private let exhibitionRepository: ExhibitionRepository
+
     //MARK: -UserDefault
-    
-    private let userDefault = UserDefaultInterface()
+
+    private let userDefault = UserDefaultInterface.shared
     
     //MARK: -input
     
@@ -153,7 +153,8 @@ class NearViewModel: NearInputOutputType, NearViewModelInput, NearViewModelOutpu
     
     var mapItems: [MKMapItem] = []
     
-    init() {
+    init(exhibitionRepository: ExhibitionRepository = FirebaseExhibitionRepository()) {
+        self.exhibitionRepository = exhibitionRepository
         storeSearchRecordsSubject
             .subscribe(onNext: {
                 self.storeSearchHistory(history: [self.inputSearchKeyword.value])
@@ -178,31 +179,15 @@ class NearViewModel: NearInputOutputType, NearViewModelInput, NearViewModelOutpu
 //        outputExhibitionInfo.accept(getNearCurrentExhibition(count: 20))
     }
     
-    //MARK: - FirebaseDataBase
-    
+    //MARK: - Repository Fetch
+
     private func getFirebaseExhibitionInfo(count: Int, completion: @escaping ([ExhibitionInfo]) -> Void ) {
-        firebaseDatabase.getRecentDocuments(count: count) { data, error in
-            if let error = error {
-                print("error:\(error)")
-            } else if let data = data {
-                var info: [ExhibitionInfo] = []
-                data.map { detailData in
-                    guard let title = detailData["title"] as? String,
-                          let image = detailData["imageUrl"] as? String,
-                          let dateString = detailData["startDate"] as? String,
-                          let agency = detailData["subUnit"] as? [String],
-                          let official = detailData["showUnit"] as? String,
-                          let showInfo = detailData["showInfo"] as? [[String: Any]],
-                          let price = showInfo.first?["price"] as? String,
-                          let time = showInfo.first?["time"] as? String,
-                          let latitude = showInfo.first?["latitude"] as? String,
-                          let longitude = showInfo.first?["longitude"] as? String,
-                          let location = showInfo.first?["locationName"] as? String,
-                          let address = showInfo.first?["location"] as? String else { return }
-                    let exhibition = ExhibitionInfo(title: title, image: image == "" ? "defaultMainPhoto" : image , tag: "一般", dateString: dateString, time: time, agency: agency.map{$0}.joined(), official: official, telephone: "", advanceTicketPrice: price, unanimousVotePrice: price, studentPrice: price, groupPrice: price, lovePrice: price, free: "", earlyBirdPrice: "", city: String(location.prefix(3)), location: location, address: address, latitude: latitude, longtitude: longitude)
-                    info.append(exhibition)
-                }
-                completion(info)
+        exhibitionRepository.getRecentExhibitions(count: count) { result in
+            switch result {
+            case .success(let exhibitions):
+                completion(exhibitions)
+            case .failure(let error):
+                AppLogger.error("error:\(error)", category: .viewModel, error: error)
             }
         }
     }
