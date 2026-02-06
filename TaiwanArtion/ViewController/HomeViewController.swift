@@ -152,9 +152,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     guard let self = self else { return }
                     let viewController = NewsViewController()
                     self.navigationController?.pushViewController(viewController, animated: true)
-//                    viewController.backAction = {
-//                        self.navigationController?.popViewController(animated: true)
-//                    }
                 }
                 return cell
             case .none: return UITableViewCell()

@@ -65,7 +65,7 @@ extension EvaluateViewController: UITableViewDelegate, UITableViewDataSource {
             contentRichnessCell.selectionStyle = .none
             contentRichnessCell.configure(title: CommentType.contentRichness.text)
             contentRichnessCell.sliderValue = { value in
-                print("contentRichnessCell.sliderValue:\(value)")
+                AppLogger.debug("contentRichnessCell.sliderValue:\(value)", category: .ui)
             }
             return contentRichnessCell
         case .geoLocation:
@@ -73,7 +73,7 @@ extension EvaluateViewController: UITableViewDelegate, UITableViewDataSource {
             geoLocationCell.selectionStyle = .none
             geoLocationCell.configure(title: CommentType.geoLocation.text)
             geoLocationCell.sliderValue = { value in
-                print("geoLocationCell.sliderValue:\(value)")
+                AppLogger.debug("geoLocationCell.sliderValue:\(value)", category: .ui)
             }
             return geoLocationCell
         case .equipment:
@@ -81,7 +81,7 @@ extension EvaluateViewController: UITableViewDelegate, UITableViewDataSource {
             equipmentCell.selectionStyle = .none
             equipmentCell.configure(title: CommentType.equipment.text)
             equipmentCell.sliderValue = { value in
-                print("equipmentCell.sliderValue:\(value)")
+                AppLogger.debug("equipmentCell.sliderValue:\(value)", category: .ui)
             }
             return equipmentCell
         case .price:
@@ -89,7 +89,7 @@ extension EvaluateViewController: UITableViewDelegate, UITableViewDataSource {
             priceCell.selectionStyle = .none
             priceCell.configure(title: CommentType.price.text)
             priceCell.sliderValue = { value in
-                print("priceCell.sliderValue:\(value)")
+                AppLogger.debug("priceCell.sliderValue:\(value)", category: .ui)
             }
             return priceCell
         case .serice:
@@ -97,7 +97,7 @@ extension EvaluateViewController: UITableViewDelegate, UITableViewDataSource {
             sericeCell.selectionStyle = .none
             sericeCell.configure(title: CommentType.serice.text)
             sericeCell.sliderValue = { value in
-                print("sericeCell.sliderValue:\(value)")
+                AppLogger.debug("sericeCell.sliderValue:\(value)", category: .ui)
             }
             return sericeCell
         case .none:

@@ -70,7 +70,7 @@ class RootViewController: UITabBarController {
     private func setPersonFileViewController() {
         userManager.output.outputIsLoginedRelay
             .subscribe(onNext: { isLogined in
-                print("isLogined:\(isLogined)")
+                AppLogger.debug("isLogined:\(isLogined)", category: .ui)
                 if isLogined {
                     //已經登入的狀態
                     self.personFileViewController = UINavigationController(rootViewController: AlreadyLoginViewController())

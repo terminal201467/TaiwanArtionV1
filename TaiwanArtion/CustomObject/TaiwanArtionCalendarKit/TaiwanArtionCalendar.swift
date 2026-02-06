@@ -216,7 +216,7 @@ class TaiwanArtionCalendar: UIView {
         yearChangedTitleView?.configure(by: self.dateView.dateCalculator.currentYear,
                                         by: self.dateView.dateCalculator.currentMonth)
         yearChangedTitleView?.afterAction = {
-            print("next")
+            AppLogger.debug("next", category: .ui)
             self.dateView.dateCalculator.nextMonth {
                 self.yearChangedTitleView?.configure(by: self.dateView.dateCalculator.currentYear,
                                                 by: self.dateView.dateCalculator.currentMonth)
@@ -225,7 +225,7 @@ class TaiwanArtionCalendar: UIView {
         }
 
         yearChangedTitleView?.beforeAction = {
-            print("pre")
+            AppLogger.debug("pre", category: .ui)
             self.yearChangedTitleView?.configure(by: self.dateView.dateCalculator.currentYear,
                                             by: self.dateView.dateCalculator.currentMonth)
             self.dateView.dateCalculator.preMonth {
@@ -236,14 +236,14 @@ class TaiwanArtionCalendar: UIView {
     
     private func setNextPreMonthAction() {
         monthChangedTitleView?.afterAction = {
-            print("next")
+            AppLogger.debug("next", category: .ui)
             self.dateView.dateCalculator.nextMonth {
                 self.dateView.collectionView.reloadData()
             }
         }
         
         monthChangedTitleView?.beforeAction = {
-            print("pre")
+            AppLogger.debug("pre", category: .ui)
             self.dateView.dateCalculator.preMonth {
                 self.dateView.collectionView.reloadData()
             }

@@ -80,11 +80,11 @@ extension NearViewController: UITextFieldDelegate {
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        print("searchTextField:\(textField.text)")
+        AppLogger.debug("searchTextField:\(String(describing: textField.text))", category: .ui)
     }
-    
+
     func textFieldDidEndEditing(_ textField: UITextField) {
-//        print("textField:\(textField.text)")
+        // Text field editing ended
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

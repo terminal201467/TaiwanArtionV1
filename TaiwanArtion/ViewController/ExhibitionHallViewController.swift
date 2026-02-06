@@ -117,17 +117,17 @@ extension ExhibitionHallViewController: UICollectionViewDelegateFlowLayout, UICo
 
 extension ExhibitionHallViewController: UISearchTextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        print("text:\(textField.text)")
+        AppLogger.debug("text:\(String(describing: textField.text))", category: .ui)
         textField.becomeFirstResponder()
     }
-    
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        print("text:\(textField.text)")
+        AppLogger.debug("text:\(String(describing: textField.text))", category: .ui)
         return true
     }
-    
+
     func textFieldDidEndEditing(_ textField: UITextField) {
-        print("text:\(textField.text)")
+        AppLogger.debug("text:\(String(describing: textField.text))", category: .ui)
         textField.resignFirstResponder()
     }
 }

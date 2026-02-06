@@ -98,7 +98,7 @@ class SendVerifyTextFieldTableViewCell: UITableViewCell {
         }
         
         timer.onTick = { second in
-            print("second:\(second)")
+            AppLogger.debug("second:\(second)", category: .ui)
             self.timeTickAction?(second)
         }
     }

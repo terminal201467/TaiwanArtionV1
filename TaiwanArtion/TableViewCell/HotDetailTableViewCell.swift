@@ -148,12 +148,7 @@ class HotDetailTableViewCell: UITableViewCell {
         titleLabel.text = title
         cityLabel.text = location
         dateLabel.text = date
-        if image == "defaultExhibition" {
-            exhibitionImage.image = UIImage(named: image)
-        } else {
-            if let imageURL = URL(string: image) {
-                exhibitionImage.kf.setImage(with: imageURL)
-            }
-        }
+        // 使用統一的圖片載入方法
+        exhibitionImage.loadImage(from: image)
     }
 }

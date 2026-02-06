@@ -96,6 +96,6 @@ extension ExhibitionCalendarViewController: UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("didSelected")
+        AppLogger.debug("didSelected", category: .ui)
     }
 }

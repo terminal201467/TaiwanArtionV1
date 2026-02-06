@@ -139,14 +139,8 @@ class MainPhotosCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(item: ExhibitionInfo) {
-        if item.image == "defaultExhibition" {
-             exhibitionImage.image = UIImage(named: item.image)
-         } else {
-             if let imageURL = URL(string: item.image) {
-                 print("imageURL:\(imageURL)")
-                 exhibitionImage.kf.setImage(with: imageURL)
-             }
-         }
+        // 使用統一的圖片載入方法
+        exhibitionImage.loadImage(from: item.image)
         titleLabel.text = item.title
         dateLabel.text = item.dateString
         tagLabel.text = item.tag

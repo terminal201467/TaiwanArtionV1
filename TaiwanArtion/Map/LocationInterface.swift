@@ -47,13 +47,13 @@ class LocationInterface: NSObject {
         let search = MKLocalSearch(request: request)
         search.start { response, error in
             if let error = error {
-                print("error:\(error.localizedDescription)")
+                AppLogger.error("error:\(error.localizedDescription)", category: .map, error: error)
             }
-            
+
             guard let items = response?.mapItems else { return }
             completion(items)
             for item in items {
-                print(
+                AppLogger.debug(
                 """
                 -----------館別資料--------------
                 name: \(item.name ?? "Unknown")
@@ -63,7 +63,8 @@ class LocationInterface: NSObject {
                 placemark: \(item.placemark)
                 distance: \(self.getCurrentLocation().distance(from: item.placemark.location!)) meters
                 -------------------------------
-                """
+                """,
+                category: .map
                 )
             }
         }
@@ -78,26 +79,7 @@ class LocationInterface: NSObject {
         }
     }
 
-//    func searchForPlaces(keyword: String, searchIn mapView: MKMapView) {
-//        let request = MKLocalSearch.Request()
-//        request.naturalLanguageQuery = keyword
-//        let search = MKLocalSearch(request: request)
-//        search.start { (response, error) in
-//            if let error = error {
-//                print("Error: \(error)")
-//                return
-//            }
-//
-//            if let items = response?.mapItems {
-//                mapView.removeAnnotations(mapView.annotations)
-//                for item in items {
-//                    mapView.addAnnotation(self.addAnnotationForMapItem(mapItem: item))
-//                }
-//            }
-//        }
-//    }
-    
-    //取得當前位置
+    // MARK: - 取得當前位置
     func getCurrentLocation() -> LocationInfo {
         guard let coordinate = locationManager.location?.coordinate else { return ("未知的經度","未知的緯度") }
         return (latitude: coordinate.latitude.formatted(),longitude: coordinate.longitude.formatted())
@@ -135,6 +117,6 @@ extension LocationInterface: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("定位失敗：\(error.localizedDescription)")
+        AppLogger.error("定位失敗：\(error.localizedDescription)", category: .map, error: error)
     }
 }

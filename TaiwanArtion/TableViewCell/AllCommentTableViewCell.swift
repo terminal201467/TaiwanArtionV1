@@ -128,7 +128,7 @@ class AllCommentTableViewCell: UITableViewCell {
     
     private func setFooterAction() {
         footer.likeAction = {
-            print("like")
+            AppLogger.debug("like", category: .ui)
         }
     }
     

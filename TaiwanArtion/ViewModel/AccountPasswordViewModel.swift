@@ -42,9 +42,7 @@ class AccountPasswordViewModel: LoginViewModelInput, LoginViewModelOutput, Login
     private let disposeBag = DisposeBag()
     
     var onLogin: PublishRelay<(String, String)> = PublishRelay()
-    
-//    let loginButtonEnabled: Observable<Bool>
-    
+
     var loginSuccess: Signal<String>
     
     var accountValidation: Signal<ValidationResult>

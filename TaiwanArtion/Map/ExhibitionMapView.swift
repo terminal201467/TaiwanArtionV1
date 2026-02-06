@@ -91,7 +91,7 @@ class ExhibitionMapView: UIView {
     private func findAndStoreCenteredCellIndexPath() {
         let centerX = locationContentCollectionView.contentOffset.x + locationContentCollectionView.bounds.width / 2
         if let indexPath = locationContentCollectionView.indexPathForItem(at: CGPoint(x: centerX, y: locationContentCollectionView.bounds.height / 2)) {
-            print("indexPath:\(indexPath.row)")
+            AppLogger.debug("indexPath:\(indexPath.row)", category: .map)
             self.mapView(self.mapView,
                          didSelect: self.mapView.dequeueReusableAnnotationView(withIdentifier: MapAnnocationView.reuseIdentifier, for: self.mapView.annotations[indexPath.row]))
         }
@@ -230,7 +230,7 @@ class ExhibitionMapView: UIView {
         .disposed(by: disposeBag)
         
         self.locationInterface.mapUpdateCenter = { centerRegion in
-            print("centerRegion:\((centerRegion))")
+            AppLogger.debug("centerRegion:\((centerRegion))", category: .map)
             self.mapView.setRegion(centerRegion, animated: true)
         }
     }
@@ -253,8 +253,8 @@ extension ExhibitionMapView: UICollectionViewDelegateFlowLayout, UICollectionVie
         .disposed(by: disposeBag)
         cell.lookUpExhibitionHallSignal.emit(onNext: {
             //推到展覽館頁面
-            print("indexPath.row:\(indexPath.row)")
-            print("ExhibitionHall:",self.viewModel.output.outputExhibitionHall.value[indexPath.row])
+            AppLogger.debug("indexPath.row:\(indexPath.row)", category: .map)
+            AppLogger.debug("ExhibitionHall:\(self.viewModel.output.outputExhibitionHall.value[indexPath.row])", category: .map)
         })
         .disposed(by: disposeBag)
         return cell

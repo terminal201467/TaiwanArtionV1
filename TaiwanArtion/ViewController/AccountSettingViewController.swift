@@ -102,14 +102,19 @@ extension AccountSettingViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch AccountSettingCell(rawValue: indexPath.row) {
-        case .facebook: print("")
-        case .google: print("")
-        case .line: print("")
-        case .twitter: print("")
+        case .facebook:
+            AppLogger.debug("facebook", category: .ui)
+        case .google:
+            AppLogger.debug("google", category: .ui)
+        case .line:
+            AppLogger.debug("line", category: .ui)
+        case .twitter:
+            AppLogger.debug("twitter", category: .ui)
         case .password:
             let viewController = ResetPasswordViewController()
             navigationController?.pushViewController(viewController, animated: true)
-        case .none: print("none")
+        case .none:
+            AppLogger.debug("none", category: .ui)
         }
     }
 }

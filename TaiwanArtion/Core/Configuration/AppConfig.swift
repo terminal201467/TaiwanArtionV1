@@ -61,7 +61,7 @@ struct AppConfig {
               !value.isEmpty,
               !value.hasPrefix("$(") else {
             #if DEBUG
-            print("⚠️ Warning: \(key) not found or not configured in Info.plist")
+            AppLogger.warning("\(key) not found or not configured in Info.plist", category: .general)
             #endif
             return ""
         }
@@ -83,7 +83,7 @@ struct AppConfig {
                !value.hasPrefix("$(") {
                 continue
             } else {
-                print("❌ Missing configuration: \(key)")
+                AppLogger.error("Missing configuration: \(key)", category: .general)
                 isValid = false
             }
         }

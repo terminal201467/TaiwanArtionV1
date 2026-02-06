@@ -173,13 +173,8 @@ class AllExhibitionCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(with exhibition: ExhibitionInfo) {
-        if exhibition.image == "defaultExhibition" {
-            exhibitionImage.image = UIImage(named: exhibition.image)
-        } else {
-            if let imageURL = URL(string: exhibition.image) {
-                exhibitionImage.kf.setImage(with: imageURL)
-            }
-        }
+        // 使用統一的圖片載入方法
+        exhibitionImage.loadImage(from: exhibition.image)
         titleLabel.text = exhibition.title
         dateLabel.text = exhibition.dateString
         cityLabel.text = exhibition.location

@@ -58,7 +58,7 @@ class SearchViewModel {
     
     private var currentItem: Int? {
         didSet {
-            print("currentItem:\(currentItem)")
+            AppLogger.debug("currentItem:\(String(describing: currentItem))", category: .viewModel)
             self.getCurrentItem?(currentItem)
             //清空選的
         }
@@ -66,9 +66,9 @@ class SearchViewModel {
     
     //MARK: -SearchAction
     func filterSearchTextFiled(withText searchText: String) {
-        print("input SearchFilter:\(searchText)")
+        AppLogger.debug("input SearchFilter:\(searchText)", category: .viewModel)
         let filterResult = store.filter{$0.title.contains(searchText)}
-        print("filterResult:\(filterResult)")
+        AppLogger.debug("filterResult:\(filterResult)", category: .viewModel)
         filterStore = filterResult
     }
     
@@ -79,7 +79,7 @@ class SearchViewModel {
     
     public func changedModeWith(isSearching: Bool) {
         isSearchModeOn = isSearching
-        print("isSearchModeOn:\(isSearchModeOn)")
+        AppLogger.debug("isSearchModeOn:\(isSearchModeOn)", category: .viewModel)
     }
     
     public func changeCurrentItem(by itemIndex: Int) {
@@ -111,20 +111,20 @@ class SearchViewModel {
     
     func collectionViewDidSelectedRowAt(indexPath: IndexPath) {
         currentItem = indexPath.row
-        print("collectionViewDidSelectedRowAt:\(currentItem)")
+        AppLogger.debug("collectionViewDidSelectedRowAt:\(String(describing: currentItem))", category: .viewModel)
     }
     
     //Selected CollectionView
     func selectedCollectionViewAllCell(bySection section: Int) {
-        print("全選TableViewSection:\(section)")
-        
+        AppLogger.debug("全選TableViewSection:\(section)", category: .viewModel)
+
     }
     
     //MARK: - TableView methods
     
     func numberOfSection() -> Int {
         if isSearchModeOn {
-            print("isSearchModeOn:\(isSearchModeOn)")
+            AppLogger.debug("isSearchModeOn:\(isSearchModeOn)", category: .viewModel)
             if let currentSelected = currentItem {
                 switch AlreadyFilter(rawValue: currentSelected) {
                 case .result: return 1

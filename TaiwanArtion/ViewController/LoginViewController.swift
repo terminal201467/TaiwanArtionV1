@@ -125,7 +125,6 @@ extension LoginViewController : UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: InputTextFieldTableViewCell.reuseIdentifier, for: indexPath) as! InputTextFieldTableViewCell
             cell.accountConfigure(placeholderText: "4-21碼小寫英文.數字")
             cell.inputAction = { inputText in
-                print("註冊帳號：\(inputText)")
                 self.viewModel.input.accountInput.accept(inputText)
             }
             return cell
@@ -133,7 +132,6 @@ extension LoginViewController : UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: InputTextFieldTableViewCell.reuseIdentifier, for: indexPath) as! InputTextFieldTableViewCell
             cell.passwordConfigure(isLocked: viewModel.output.isLocked.value, isPrevented: viewModel.output.isPrevented.value, placeholdText: "4-21碼小寫英文.數字")
             cell.inputAction = { inputText in
-                print("註冊密碼:\(inputText)")
                 self.viewModel.input.passwordInput.accept(inputText)
             }
             return cell

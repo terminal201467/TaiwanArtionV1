@@ -27,11 +27,11 @@ class TitleMonthCollectionViewCell: UICollectionViewCell {
     
     var preMonthAction: (() -> Void)?
     
-    private let titleBarItem = UIBarButtonItem(title: nil, style: .plain, target: self, action: nil)
+    private let titleBarItem = UIBarButtonItem(title: nil, style: .plain, target: TitleMonthCollectionViewCell.self, action: nil)
     
-    private let rightArrowButton = UIBarButtonItem(image: .init(named: "rightArrow")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: nil)
+    private let rightArrowButton = UIBarButtonItem(image: .init(named: "rightArrow")?.withRenderingMode(.alwaysOriginal), style: .plain, target: TitleMonthCollectionViewCell.self, action: nil)
     
-    private let leftArrowButton = UIBarButtonItem(image: .init(named: "leftArrow")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: nil)
+    private let leftArrowButton = UIBarButtonItem(image: .init(named: "leftArrow")?.withRenderingMode(.alwaysOriginal), style: .plain, target: TitleMonthCollectionViewCell.self, action: nil)
 
     private lazy var monthTitleBar: UIToolbar = {
         titleBarItem.tintColor = .brownTitleColor
@@ -76,6 +76,6 @@ class TitleMonthCollectionViewCell: UICollectionViewCell {
     
     func configure(currenMonth: Month) {
         currentTitleMonth = "\(currenMonth.numberText)" + "月" + "\(currenMonth.englishText)"
-        print("currentTitleMonth:\(currentTitleMonth!)")
+        AppLogger.debug("currentTitleMonth:\(currentTitleMonth!)", category: .ui)
     }
 }

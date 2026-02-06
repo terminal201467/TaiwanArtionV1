@@ -229,9 +229,6 @@ class NearExhibitionDetailTableViewCell: UITableViewCell {
     @objc private func like() {
         self.isLiked.toggle()
         self.setLikeButton()
-//        likeActionSignal = likeButton.rx.tap.asSignal(onErrorJustReturn: ())
-//            .do(onNext: {
-//            })
     }
 
     private func setLikeButton() {
@@ -240,19 +237,14 @@ class NearExhibitionDetailTableViewCell: UITableViewCell {
     
     //評價
     func evaluateConfigure(with info: ExhibitionInfo) {
-        starEvaluatelabel.text = "\(info.evaluation?.allCommentStar)"
-        evaluateLabel.text = "(\(info.evaluation?.allCommentCount))"
+        starEvaluatelabel.text = "\(String(describing: info.evaluation?.allCommentStar))"
+        evaluateLabel.text = "(\(String(describing: info.evaluation?.allCommentCount)))"
     }
     
     //細節內容
     func detailConfigure(with info: ExhibitionInfo) {
-        if info.image == "defaultMainPhoto" {
-            self.contentMainImage.image = .init(named: info.image)
-        } else {
-            if let imageURL = URL(string: info.image) {
-                self.contentMainImage.kf.setImage(with: imageURL)
-            }
-        }
+        // 使用統一的圖片載入方法
+        contentMainImage.loadImage(from: info.image)
         titleLabel.text = info.title
         timeLabel.text = info.dateString
         tagLabel.text = info.tag

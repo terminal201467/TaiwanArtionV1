@@ -42,14 +42,14 @@ class PersonalFileViewController: UIViewController{
         }
         
         welcomeRegisterView.socialKitRegister = { socialKitKind in
-            print(socialKitKind)
+            AppLogger.debug("socialKitKind: \(socialKitKind)", category: .ui)
             switch socialKitKind {
             case "facebook":
                 self.userManager.input.facebookLoginSubject.onNext(self)
             case "google":
                 self.userManager.input.googleLoginSubject.onNext(self)
-            case "line": print("not Define")
-            default: print("default")
+            case "line": AppLogger.debug("not Define", category: .ui)
+            default: AppLogger.debug("default", category: .ui)
             }
         }
     }

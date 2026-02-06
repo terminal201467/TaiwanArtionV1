@@ -53,7 +53,7 @@ class NotifyViewModel {
     }
     
     func setUnReadCount() -> Int {
-        print("unreadCount:\(unreadCount)")
+        AppLogger.debug("unreadCount:\(unreadCount)", category: .viewModel)
         return unreadCount
     }
     
@@ -78,7 +78,7 @@ class NotifyViewModel {
         switch NotifyType(rawValue: indexPath.row) {
         case .exhibitionNotify: currentNotifyPage = NotifyType(rawValue: indexPath.row)!
         case .systemNotify: currentNotifyPage = NotifyType(rawValue: indexPath.row)!
-        case .none: print("none")
+        case .none: AppLogger.debug("none", category: .viewModel)
         }
     }
     
@@ -105,10 +105,10 @@ class NotifyViewModel {
         switch currentNotifyPage {
         case .exhibitionNotify:
             readExhibitions.insert(exhibitions[indexPath.row])
-            print("readExhibitions:\(readExhibitions)")
-            print("readExhibitions.count:\(readExhibitions.count)")
+            AppLogger.debug("readExhibitions:\(readExhibitions)", category: .viewModel)
+            AppLogger.debug("readExhibitions.count:\(readExhibitions.count)", category: .viewModel)
         case .systemNotify:
-            print("systemNotification")
+            AppLogger.debug("systemNotification", category: .viewModel)
         }
     }
     

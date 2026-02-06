@@ -25,6 +25,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Kingfisher 全域配置
         configureKingfisher()
 
+        // 啟動網路狀態監控
+        NetworkMonitor.shared.startMonitoring()
+
         return true
     }
 

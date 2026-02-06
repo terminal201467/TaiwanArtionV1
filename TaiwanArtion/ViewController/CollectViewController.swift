@@ -59,7 +59,7 @@ class CollectViewController: UIViewController {
     
     private func setMenuSelected() {
         collectView.menu.selectedMenuItem = { selectedMenuItem in
-            print("selectedMenuItem:\(selectedMenuItem)")
+            AppLogger.debug("selectedMenuItem:\(selectedMenuItem)", category: .ui)
             self.viewModel.input.currentCollectMenu.accept(selectedMenuItem)
         }
         
@@ -70,13 +70,13 @@ class CollectViewController: UIViewController {
             .disposed(by: disposeBag)
         
         collectView.exhibitionCollectionView.selectedTimeMenu = { menuIndex in
-            print("menuIndex:\(menuIndex)")
+            AppLogger.debug("menuIndex:\(menuIndex)", category: .ui)
             self.viewModel.input.currentTimeMenu.accept(menuIndex)
         }
-        
+
         viewModel.output.currentSelectedTimeMenu
             .subscribe(onNext: { menuIndex in
-                print("menuIndex:\(menuIndex)")
+                AppLogger.debug("menuIndex:\(menuIndex)", category: .ui)
                 self.collectView.exhibitionCollectionView.currentTimeMenuSelected = menuIndex
             })
             .disposed(by: disposeBag)
@@ -91,7 +91,7 @@ extension CollectViewController: UICollectionViewDelegateFlowLayout, UICollectio
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AllExhibitionCollectionViewCell.reuseIdentifier, for: indexPath) as! AllExhibitionCollectionViewCell
-        print("viewModel.output.currentExhibitionContent.value:\(viewModel.output.currentExhibitionContent.value)")
+        AppLogger.debug("viewModel.output.currentExhibitionContent.value:\(viewModel.output.currentExhibitionContent.value)", category: .ui)
         cell.configure(with: viewModel.output.currentExhibitionContent.value[indexPath.row])
         return cell
     }

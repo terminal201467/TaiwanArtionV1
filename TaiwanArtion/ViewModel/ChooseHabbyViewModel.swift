@@ -34,7 +34,7 @@ class ChooseHabbyViewModel {
     }
     
     private func uploadHabbyDataToFireBase() {
-        print("uploadHabby")
+        AppLogger.debug("uploadHabby", category: .viewModel)
     }
     
     func setIsAllowToTap() -> Bool {

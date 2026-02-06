@@ -81,9 +81,6 @@ extension NearExhibitionDetailView: UITableViewDelegate, UITableViewDataSource {
         cell.selectionStyle = .none
         cell.evaluateConfigure(with: viewModel.output.outputExhibitionInfo.value[indexPath.row])
         cell.detailConfigure(with: viewModel.output.outputExhibitionInfo.value[indexPath.row])
-//        cell.likeActionSignal.asObservable().subscribe {
-//            tableView.reloadData()
-//        }
         return cell
     }
     

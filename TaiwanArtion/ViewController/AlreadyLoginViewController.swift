@@ -84,16 +84,15 @@ extension AlreadyLoginViewController: UITableViewDelegate, UITableViewDataSource
             self.navigationController?.pushViewController(viewController, animated: true)
         case .habbySetting:
             //推向HabbyController
-            print("habbySetting")
+            AppLogger.debug("habbySetting", category: .ui)
         case .accountSetting:
             //推向
-//            print("accountSetting")
             let viewController = AccountSettingViewController()
             self.navigationController?.pushViewController(viewController, animated: true)
         case .appEvaluation:
             //評價
-            print("appEvaluation")
-        case .none: print("none")
+            AppLogger.debug("appEvaluation", category: .ui)
+        case .none: AppLogger.debug("none", category: .ui)
         }
     }
 }

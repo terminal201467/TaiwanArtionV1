@@ -74,13 +74,8 @@ class NewsCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(image: String, title: String, date: String, author: String) {
-        if image == "defaultExhibition" {
-            mainImage.image = UIImage(named: image)
-        } else {
-            if let imageURL = URL(string: image) {
-                mainImage.kf.setImage(with: imageURL)
-            }
-        }
+        // 使用統一的圖片載入方法
+        mainImage.loadImage(from: image)
         titleLabel.text = title
         subTitleLabel.text = "\(date)|\(author)"
     }

@@ -123,7 +123,6 @@ extension SplashViewController: UICollectionViewDataSource, UICollectionViewDele
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HabbyCollectionViewCell.reuseIdentifier, for: indexPath) as! HabbyCollectionViewCell
         let selectedHabbyText = HabbyItem(rawValue: indexPath.item)?.titleText ?? ""
         viewModel.handleSelectedItem.accept(selectedHabbyText)
         viewModel.handleSelectedIndex.accept(indexPath.item)

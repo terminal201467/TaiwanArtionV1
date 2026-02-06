@@ -23,7 +23,7 @@ class SearchViewController: UIViewController {
     
     var currentSelectedItem: Int? {
         didSet {
-            print("currentSelectedItem:\(currentSelectedItem)")
+            AppLogger.debug("currentSelectedItem:\(String(describing: currentSelectedItem))", category: .ui)
             self.hiddenLocation()
             self.searchView.filterTableView.reloadData()
             self.searchView.filterContentCollectionView.reloadData()
@@ -84,7 +84,7 @@ class SearchViewController: UIViewController {
     
     private func setSearchFilterSelected() {
         searchFilterView.searchSelectedItem = { item in
-            print("item:\(item.text)")
+            AppLogger.debug("item:\(item.text)", category: .ui)
         }
     }
     
@@ -125,7 +125,7 @@ class SearchViewController: UIViewController {
         }
         
         searchView.searchValueChanged = { changed in
-            print("changed:\(changed)")
+            AppLogger.debug("changed:\(changed)", category: .ui)
             self.viewModel.filterSearchTextFiled(withText: changed)
             self.searchView.filterContentCollectionView.reloadData()
             self.searchView.filterTableView.reloadData()
@@ -133,7 +133,7 @@ class SearchViewController: UIViewController {
         }
         
         searchView.endInputText = { endText in
-            print("finalSearch:\(endText)")
+            AppLogger.debug("finalSearch:\(endText)", category: .ui)
             self.viewModel.filterSearchTextFiled(withText: endText)
             self.searchView.filterContentCollectionView.reloadData()
             self.searchView.filterTableView.reloadData()
@@ -184,7 +184,8 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout, UICollection
                     self.present(self.popUpViewController, animated: true)
                 }
                 return buttonCell
-            case .none: print("none")
+            case .none:
+                AppLogger.debug("none", category: .ui)
                 return UICollectionViewCell()
             }
         } else {
@@ -219,7 +220,7 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("indexPath:\(indexPath)")
+        AppLogger.debug("indexPath:\(indexPath)", category: .ui)
         viewModel.collectionViewDidSelectedRowAt(indexPath: indexPath)
         searchView.filterContentCollectionView.reloadData()
         searchView.filterTableView.reloadData()
@@ -348,17 +349,8 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
                         cell.configure(itemTitle: DateKind.allCases.map{$0.text})
                         return cell
                     case .calendar:
-//                        let calendarView = CalendarView()
-//                        calendarCell.contentView.addSubview(calendarView)
-//                        calendarView.snp.makeConstraints { make in
-//                            make.height.equalTo(500)
-//                            make.top.equalToSuperview()
-//                            make.leading.equalToSuperview()
-//                            make.trailing.equalToSuperview()
-//                            make.bottom.equalToSuperview()
-//                        }
-//                        return calendarCell
-                        print("calendarView")
+                        // TODO: 實作日曆視圖
+                        AppLogger.debug("calendarView", category: .ui)
                     case .correct:
                         correctButtonCell.configure(buttonName: "確定")
                         return correctButtonCell
@@ -374,7 +366,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
             } else {
                 let unSearchModel = viewModel.unSearchModeTableViewCellForRowAt(indexPath: indexPath)
                 let cell = tableView.dequeueReusableCell(withIdentifier: UnSearchModeChooseTableViewCell.reuseIdentifier, for: indexPath) as! UnSearchModeChooseTableViewCell
-                print("unSearchModel：\(unSearchModel)")
+                AppLogger.debug("unSearchModel：\(unSearchModel)", category: .ui)
                 cell.configure(itemTitle: unSearchModel)
                 return cell
             }

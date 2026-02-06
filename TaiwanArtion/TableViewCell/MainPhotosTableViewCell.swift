@@ -59,7 +59,7 @@ class MainPhotosTableViewCell: UITableViewCell {
         collectionView.rx.setDelegate(self)
         viewModel.inputs.mainPhotoSelected
             .subscribe { index in
-                print("index:\(index)")
+                AppLogger.debug("index:\(index)", category: .ui)
             }
             .disposed(by: disposeBag)
         

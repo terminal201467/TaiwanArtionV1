@@ -45,7 +45,7 @@ class NearSearchResultViewController: UIViewController {
     private func setSearchHistory() {
         viewModel.output.outputSearchHistory
             .subscribe(onNext: { historyInfos in
-                print("historys:\(historyInfos)")
+                AppLogger.debug("historys:\(historyInfos)", category: .ui)
                 self.nearSearchReaultView.configure(historys: historyInfos)
             })
             .disposed(by: disposeBag)
@@ -69,7 +69,7 @@ extension NearSearchResultViewController: UISearchTextFieldDelegate {
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        print("searchTextField:\(textField.text!)")
+        AppLogger.debug("searchTextField:\(textField.text!)", category: .ui)
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {

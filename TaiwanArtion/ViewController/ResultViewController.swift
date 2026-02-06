@@ -76,7 +76,7 @@ class ResultViewController: UIViewController {
         switch CollectMenu(rawValue: menuOrder) {
         case .collectExhibition:
             viewModel.output.storeHistoryObservable.subscribe(onNext: { historys in
-                print("history:\(historys)")
+                AppLogger.debug("history:\(historys)", category: .ui)
                 self.searchHistoryView = SearchingHistoryView(frame: .zero, historys: historys.map{$0.title}, type: .exhibitionNothingSearch)
             })
             .disposed(by: disposeBag)
@@ -88,7 +88,7 @@ class ResultViewController: UIViewController {
             }
         case .collectExhibitionHall:
             viewModel.output.storeExhibitionHallObservable.subscribe(onNext: { hallInfos in
-                print("hallInfo:\(hallInfos)")
+                AppLogger.debug("hallInfo:\(hallInfos)", category: .ui)
                 self.searchHistoryView = SearchingHistoryView(frame: .zero, historys: hallInfos.map{$0.title}, type: .exhibitionHallNothingSearch)
             })
             .disposed(by: disposeBag)
@@ -100,7 +100,7 @@ class ResultViewController: UIViewController {
             }
         case .collectNews:
             viewModel.output.storeNewsObservable.subscribe(onNext: { news in
-                print("news:\(news)")
+                AppLogger.debug("news:\(news)", category: .ui)
                 self.searchHistoryView = SearchingHistoryView(frame: .zero, historys: news.map{$0.title}, type: .newsNothingSearch)
             })
             .disposed(by: disposeBag)
@@ -110,7 +110,7 @@ class ResultViewController: UIViewController {
                     make.edges.equalToSuperview()
                 }
             }
-        case .none: print("none")
+        case .none: AppLogger.debug("none", category: .ui)
         }
     }
 }
@@ -118,7 +118,7 @@ class ResultViewController: UIViewController {
 extension ResultViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        print("text:\(textField.text!)")
+        AppLogger.debug("text:\(String(describing: textField.text))", category: .ui)
         viewModel.textEditingRelay.accept(textField.text!)
         return true
     }

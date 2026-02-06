@@ -40,6 +40,8 @@ public protocol HomeViewModelOutput: AnyObject {
     var mainPhotoRelay: BehaviorRelay<[ExhibitionInfo]> { get }
     var newsRelay: BehaviorRelay<[News]> { get }
     var allExhibitionRelay: BehaviorRelay<[ExhibitionInfo]> { get }
+    var isLoadingMoreRelay: BehaviorRelay<Bool> { get }
+    var hasMoreExhibitionsRelay: BehaviorRelay<Bool> { get }
 }
 
 public protocol HomeViewModelType: AnyObject {
@@ -77,7 +79,14 @@ class HomeViewModel: HomeViewModelType, HomeViewModelInput, HomeViewModelOutput 
     let newsRelay = BehaviorRelay<[News]>(value: [])
     
     let allExhibitionRelay = BehaviorRelay<[ExhibitionInfo]>(value: [])
-    
+
+    // MARK: - Pagination State
+
+    let isLoadingMoreRelay = BehaviorRelay<Bool>(value: false)
+    let hasMoreExhibitionsRelay = BehaviorRelay<Bool>(value: true)
+    private var lastExhibitionDocument: Any?
+    private let pageSize = 10
+
     //MARK: - CollectionViewSelectedRelay
     
     private let currentMonthsSubject = BehaviorSubject<Month>(value: .jan)
@@ -221,5 +230,66 @@ class HomeViewModel: HomeViewModelType, HomeViewModelInput, HomeViewModelOutput 
             }
         }
     }
-    
+
+    // MARK: - Pagination Methods
+
+    /// 載入更多「所有展覽」資料（分頁）
+    func loadMoreAllExhibitions() {
+        // 防止重複載入
+        guard !isLoadingMoreRelay.value else {
+            AppLogger.debug("正在載入中，跳過", category: .viewModel)
+            return
+        }
+
+        // 檢查是否還有更多資料
+        guard hasMoreExhibitionsRelay.value else {
+            AppLogger.debug("已無更多資料", category: .viewModel)
+            return
+        }
+
+        isLoadingMoreRelay.accept(true)
+
+        exhibitionRepository.getExhibitionsPaginated(
+            pageSize: pageSize,
+            lastDocument: lastExhibitionDocument
+        ) { [weak self] result in
+            guard let self = self else { return }
+
+            self.isLoadingMoreRelay.accept(false)
+
+            switch result {
+            case .success(let paginatedResult):
+                // 更新分頁游標
+                self.lastExhibitionDocument = paginatedResult.lastDocument
+                self.hasMoreExhibitionsRelay.accept(paginatedResult.hasMore)
+
+                // 追加資料到現有列表
+                let currentExhibitions = self.allExhibitionRelay.value
+                let newExhibitions = currentExhibitions + paginatedResult.exhibitions
+                self.allExhibitionRelay.accept(newExhibitions)
+
+                AppLogger.info(
+                    "分頁載入成功: 新增 \(paginatedResult.exhibitions.count) 筆, 總共 \(newExhibitions.count) 筆",
+                    category: .viewModel
+                )
+
+            case .failure(let error):
+                AppLogger.error("分頁載入失敗", category: .viewModel, error: error)
+            }
+        }
+    }
+
+    /// 重置分頁狀態（切換排序方式時呼叫）
+    func resetPagination() {
+        lastExhibitionDocument = nil
+        hasMoreExhibitionsRelay.accept(true)
+        allExhibitionRelay.accept([])
+        AppLogger.debug("分頁狀態已重置", category: .viewModel)
+    }
+
+    /// 首次載入所有展覽（分頁模式）
+    func loadInitialAllExhibitions() {
+        resetPagination()
+        loadMoreAllExhibitions()
+    }
 }

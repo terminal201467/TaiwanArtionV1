@@ -13,7 +13,7 @@ class DateCalculator {
     
     private var selectedDate: Date? {
         didSet {
-            print("selectedDate:\(selectedDate!)")
+            AppLogger.debug("selectedDate:\(selectedDate!)", category: .ui)
         }
     }
     //calendar
@@ -52,8 +52,8 @@ class DateCalculator {
         } else {
             currentMonth += 1
         }
-        print("currentYear:\(currentYear)")
-        print("currentMonth:\(currentMonth)")
+        AppLogger.debug("currentYear:\(currentYear)", category: .ui)
+        AppLogger.debug("currentMonth:\(currentMonth)", category: .ui)
     }
     
     func preMonth(completion: @escaping (() -> Void)) {
@@ -63,8 +63,8 @@ class DateCalculator {
         } else {
             currentMonth -= 1
         }
-        print("currentYear:\(currentYear)")
-        print("currentMonth:\(currentMonth)")
+        AppLogger.debug("currentYear:\(currentYear)", category: .ui)
+        AppLogger.debug("currentMonth:\(currentMonth)", category: .ui)
     }
     
     func setCalendarYear(year: Int) {

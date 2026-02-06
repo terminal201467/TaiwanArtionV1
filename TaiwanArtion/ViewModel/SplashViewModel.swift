@@ -23,13 +23,13 @@ class SplashViewModel {
     private var selectedItems = Set<String>() {
         didSet {
             allowTap?(setAllowButtonTap())
-            print("selectedItems:\(selectedItems)")
+            AppLogger.debug("selectedItems:\(selectedItems)", category: .viewModel)
         }
     }
     
     private var selectedIndex = Set<Int>() {
         didSet {
-            print("selectedIndex:\(selectedIndex)")
+            AppLogger.debug("selectedIndex:\(selectedIndex)", category: .viewModel)
         }
     }
     

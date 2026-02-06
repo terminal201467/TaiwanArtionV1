@@ -120,22 +120,22 @@ class PersonInfoViewModel: PersonInfoInput, PersonInfoOutput, PersonInfoViewMode
     //MARK: -Initialization
     init() {
         nameInput.subscribe { text in
-            print("nameInputText:\(text)")
+            AppLogger.debug("nameInputText:\(text)", category: .viewModel)
         }
         .disposed(by: disposeBag)
-        
+
         genderInput.subscribe { text in
-            print("genderInput:\(text)")
+            AppLogger.debug("genderInput:\(text)", category: .viewModel)
         }
         .disposed(by: disposeBag)
-        
+
         birthMonthInput.subscribe(onNext: { monthText in
-            print("monthText:\(monthText)")
+            AppLogger.debug("monthText:\(monthText)", category: .viewModel)
             self.monthOutput.accept(monthText)
         }).disposed(by: disposeBag)
-        
+
         birthDateInput.subscribe(onNext: { dateText in
-            print("dateText:\(dateText)")
+            AppLogger.debug("dateText:\(dateText)", category: .viewModel)
             self.dateOutput.accept(dateText)
         }).disposed(by: disposeBag)
         
@@ -144,12 +144,12 @@ class PersonInfoViewModel: PersonInfoInput, PersonInfoOutput, PersonInfoViewMode
         }).disposed(by: disposeBag)
         
         emailInput.subscribe { text in
-            print("emailInput:\(text)")
+            AppLogger.debug("emailInput:\(text)", category: .viewModel)
         }
         .disposed(by: disposeBag)
-        
+
         phoneInput.subscribe { text in
-            print("phoneInput:\(text)")
+            AppLogger.debug("phoneInput:\(text)", category: .viewModel)
         }
         .disposed(by: disposeBag)
         

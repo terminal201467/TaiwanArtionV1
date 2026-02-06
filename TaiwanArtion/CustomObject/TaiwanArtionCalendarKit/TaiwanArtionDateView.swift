@@ -8,29 +8,18 @@
 import UIKit
 
 class TaiwanArtionDateView: UIView {
-    
+
     var calendarType: CalendarType
-    
+
     var selectedDate: ((Date) -> Void)?
-    
-    private lazy var overlayContainerView = UIView(frame: self.collectionView.frame)
-    
-    private lazy var overlayView: UIView = {
-        let overlayView = UIView(frame: self.collectionView.frame)
-        overlayView.backgroundColor = UIColor(white: 0.5, alpha: 0.5) // 半透明的灰色背景
-        overlayContainerView.addSubview(overlayView)
-        overlayView.isHidden = true // 初始時隱藏
-        return overlayView
-    }()
-    
+
     init(frame: CGRect, type: CalendarType) {
         calendarType = type
         super.init(frame: frame)
         autoLayout()
         setDelegate()
-//        setCollectionViewPanGesture()
     }
-    
+
     let dateCalculator = DateCalculator()
 
     let collectionView: UICollectionView = {
@@ -59,38 +48,7 @@ class TaiwanArtionDateView: UIView {
             make.edges.equalToSuperview()
         }
     }
-    
-//    private func setCollectionViewPanGesture() {
-//        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-//        collectionView.addGestureRecognizer(panGesture)
-//    }
-    
-//    @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
-//        var panSelectedIndexPath: [IndexPath]?
-//        switch gesture.state {
-//        case .began:
-//            panSelectedIndexPath = []
-//        case .changed:
-//            let location = gesture.location(in: collectionView)
-//            print("location:\(location)")
-//            if let indexPath = collectionView.indexPathForItem(at: location) {
-//                panSelectedIndexPath?.append(indexPath)
-//                dateCalculator.multipleSelectedRowAt(indexPaths: panSelectedIndexPath ?? [])
-//                print("panSelectedIndexPath:\(panSelectedIndexPath)")
-//                if let cell = collectionView.cellForItem(at: indexPath) as? DateCollectionViewCell {
-//                    let contentSubview = cell.backgroundImageView
-//                    overlayContainerView.addSubview(overlayView)
-//                    overlayContainerView.bringSubviewToFront(contentSubview)
-//                }
-//            }
-//        case .ended:
-//            print("ended")
-//            //如果有底下的Button的話，button就變成咖啡色
-//        default:
-//            break
-//        }
-//    }
-    
+
     func setYearMonth(year: Int, month: Int) {
         dateCalculator.setCalendarYear(year: year)
         dateCalculator.setCalendarMonth(month: month)
@@ -119,7 +77,7 @@ extension TaiwanArtionDateView: UICollectionViewDelegateFlowLayout, UICollection
         dateCalculator.singleDidSelectedRowAt(indexPath: indexPath)
         dateCalculator.selectedDateCompletion = { date in
             self.selectedDate?(date)
-            print("date:\(date)")
+            AppLogger.debug("date:\(date)", category: .ui)
         }
         collectionView.reloadData()
     }

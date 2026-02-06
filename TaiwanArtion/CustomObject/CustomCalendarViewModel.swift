@@ -83,8 +83,8 @@ class CustomCalendarViewModel: CalendarViewModelType, CalendarInput, CalendarOut
         }).disposed(by: disposeBag)
         
         correctTime.subscribe(onNext: {
-            print("selectedMonth:\(self.selectedMonth)")
-            print("selectedDate:\(self.selectedDate)")
+            AppLogger.debug("selectedMonth:\(self.selectedMonth)", category: .viewModel)
+            AppLogger.debug("selectedDate:\(self.selectedDate)", category: .viewModel)
             self.sendOutSelecteMonthAndDate.accept((self.selectedMonth, self.selectedDate))
         }).disposed(by: disposeBag)
         

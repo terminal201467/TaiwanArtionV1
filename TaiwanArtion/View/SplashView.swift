@@ -394,7 +394,7 @@ class SplashView: UIView {
     
     private func setStartViewRoutine() {
         countDownTimer.onTick = { timeRemaining in
-            print("Time remaining: \(timeRemaining)")
+            AppLogger.debug("Time remaining: \(timeRemaining)", category: .ui)
         }
         countDownTimer.onCompleted = {
             self.removeStartView()

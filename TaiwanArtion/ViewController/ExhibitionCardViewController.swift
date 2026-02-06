@@ -353,7 +353,7 @@ extension ExhibitionCardViewController: UITableViewDelegate, UITableViewDataSour
                     cell.selectionStyle = .none
                     return cell
                 case .none:
-                    print("none")
+                    AppLogger.debug("none", category: .ui)
                 }
             case .none: return UITableViewCell()
             }
@@ -388,7 +388,7 @@ extension ExhibitionCardViewController: UITableViewDelegate, UITableViewDataSour
                 let cell = tableView.dequeueReusableCell(withIdentifier: ButtonTableViewCell.reuseIdentifier, for: indexPath) as! ButtonTableViewCell
                 cell.configure(buttonName: "規劃路線")
                 cell.action = {
-                    print("規劃路線")
+                    AppLogger.debug("規劃路線", category: .ui)
                 }
                 return cell
             case .none: return UITableViewCell()

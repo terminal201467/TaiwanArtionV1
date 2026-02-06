@@ -80,11 +80,11 @@ extension NewsSearchingViewController: UICollectionViewDelegateFlowLayout, UICol
             let calendar = Calendar.current
             let currentYear = calendar.component(.year, from: currentDate)
             titleHeaderView.configure(text: "\(currentYear)", textSize: 18)
-        case .habbyContent: print("habbyContent")
-        case .newsFilterMenu: print("newsFilterMenu")
+        case .habbyContent: break
+        case .newsFilterMenu:
             titleHeaderView.configure(text: "藝文新聞", textSize: 22)
-        case .newsContent: print("newsContent")
-        case .none: print("none")
+        case .newsContent: break
+        case .none: break
         }
         return titleHeaderView
     }
@@ -179,9 +179,9 @@ extension NewsSearchingViewController: UICollectionViewDelegateFlowLayout, UICol
         case .habbyContent: viewModel.input.inputSelectHabby.accept(HabbyItem.allCases[indexPath.row])
         case .newsFilterMenu: viewModel.input.inputNewsFilter.accept(NewsFilterItem.allCases[indexPath.row])
         case .newsContent:
-            print("push到新聞頁面")
-            //push到新聞的頁面
-        case .none: print("none")
+            // TODO: push到新聞的頁面
+            break
+        case .none: break
         }
         collectionView.reloadData()
     }

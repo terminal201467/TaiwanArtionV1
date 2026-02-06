@@ -84,7 +84,7 @@ class SettingHeadViewModel: SettingHeadViewModelInput, SettingHeadViewModelOutpu
         
         savePhoto.subscribe(onNext: {
             //這邊儲存進本地端的照片
-            print("savePhoto")
+            AppLogger.debug("savePhoto", category: .viewModel)
             //存進去Firebase
         })
         .disposed(by: disposeBag)
