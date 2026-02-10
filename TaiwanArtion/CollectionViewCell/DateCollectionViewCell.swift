@@ -7,59 +7,59 @@
 
 import UIKit
 
-class DateCollectionViewCell: UICollectionViewCell {
-    
-    static let reuseIdentifier: String = "DateCollectionViewCell"
-    
+class DateCollectionViewCell: BaseCollectionViewCell {
+
     let dateLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
-    
+
     let backgroundImageView: UIImageView = {
         let view = UIImageView(image: .init(named: "calendarDateSelected"))
         view.contentMode = .scaleAspectFit
         return view
     }()
-    
+
     private let eventDotView: UIImageView = {
         let imageView = UIImageView(image: .init(named: "brownDot"))
         return imageView
     }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+
+    override func setupCell() {
         autoLayout()
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+
+    override func cleanupForReuse() {
+        dateLabel.text = nil
+        dateLabel.textColor = .black
+        backgroundImageView.isHidden = true
+        eventDotView.isHidden = true
     }
-    
+
     private func autoLayout() {
         contentView.addSubview(backgroundImageView)
         backgroundImageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        
+
         contentView.addSubview(dateLabel)
         dateLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()
         }
-        
+
         contentView.addSubview(eventDotView)
         eventDotView.snp.makeConstraints { make in
             make.leading.equalTo(backgroundImageView.snp.leading)
             make.top.equalTo(backgroundImageView.snp.top)
         }
     }
-    
+
     func configureEventDot(isEvent: Bool) {
         eventDotView.isHidden = !isEvent
     }
-    
+
     func configure(dateString: String, isToday: Bool, isCurrentMonth: Bool) {
         dateLabel.text = dateString
         if isCurrentMonth {
@@ -69,7 +69,7 @@ class DateCollectionViewCell: UICollectionViewCell {
         }
         backgroundImageView.isHidden = isToday ? false : true
     }
-    
+
     func changeCurrentSelectedItem(isCurrentSelected: Bool) {
         dateLabel.textColor = isCurrentSelected ? .white : .brownColor
         backgroundImageView.isHidden = !isCurrentSelected

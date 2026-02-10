@@ -10,15 +10,11 @@ import RxSwift
 import RxCocoa
 import RxRelay
 
-class HotHxhibitionTableViewCell: UITableViewCell {
-    
-    static let reuseIdentifier: String = "HotHxhibitionTableViewCell"
-    
+class HotHxhibitionTableViewCell: BaseTableViewCell {
+
     private let viewModel = HomeViewModel.shared
-    
+
     var pushToViewController: ((ExhibitionInfo) -> Void)?
-    
-    private let disposeBag = DisposeBag()
     
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
@@ -30,14 +26,13 @@ class HotHxhibitionTableViewCell: UITableViewCell {
         return tableView
     }()
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override func setupCell() {
         setTableViewBinding()
         autoLayout()
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+
+    override func cleanupForReuse() {
+        pushToViewController = nil
     }
     
     private func setTableViewBinding() {
@@ -49,8 +44,8 @@ class HotHxhibitionTableViewCell: UITableViewCell {
             .disposed(by: disposeBag)
         
         tableView.rx.itemSelected
-            .subscribe(onNext: { indexPath in
-                self.viewModel.inputs.hotExhibitionSelected.onNext(indexPath)
+            .subscribe(onNext: { [weak self] indexPath in
+                self?.viewModel.inputs.hotExhibitionSelected.onNext(indexPath)
             })
             .disposed(by: disposeBag)
         

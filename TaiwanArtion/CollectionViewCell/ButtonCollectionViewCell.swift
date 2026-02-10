@@ -10,31 +10,30 @@ import RxSwift
 import RxCocoa
 import RxRelay
 
-class ButtonCollectionViewCell: UICollectionViewCell {
-    
-    static let reuseIdentifier: String = "ButtonCollectionViewCell"
-    
+class ButtonCollectionViewCell: BaseCollectionViewCell {
+
     private var isImage: Bool = true
-    
-    private let disposeBag = DisposeBag()
-    
+
     var action: (() -> Void)?
-    
+
     private let button: UIButton = {
         let button = UIButton()
         return button
     }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+
+    override func setupCell() {
         setButton()
         imageAutoLayout()
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+
+    override func cleanupForReuse() {
+        button.setImage(nil, for: .normal)
+        button.setTitle(nil, for: .normal)
+        button.backgroundColor = nil
+        action = nil
+        isImage = true
     }
-    
+
     private func imageAutoLayout() {
         contentView.addSubview(button)
         button.snp.makeConstraints { make in
@@ -42,7 +41,7 @@ class ButtonCollectionViewCell: UICollectionViewCell {
             make.centerY.equalToSuperview()
         }
     }
-    
+
     private func roundButtonAutoLayout() {
         contentView.addSubview(button)
         button.snp.makeConstraints { make in
@@ -50,19 +49,19 @@ class ButtonCollectionViewCell: UICollectionViewCell {
             make.height.equalTo(40.0)
         }
     }
-    
+
     private func setButton() {
         button.rx.tap
-            .subscribe(onNext: {
-                self.action?()
+            .subscribe(onNext: { [weak self] in
+                self?.action?()
             })
             .disposed(by: disposeBag)
     }
-    
+
     func configure(iconText: String) {
         button.setImage(UIImage(named: iconText), for: .normal)
     }
-    
+
     func configureRoundButton(isAllowToTap: Bool, buttonTitle: String) {
         roundButtonAutoLayout()
         button.roundCorners(cornerRadius: 20)

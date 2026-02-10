@@ -9,9 +9,7 @@ import UIKit
 import SnapKit
 import Kingfisher
 
-class HotDetailTableViewCell: UITableViewCell {
-    
-    static let reuseIdentifier: String = "HotDetailTableViewCell"
+class HotDetailTableViewCell: BaseTableViewCell {
     
     private let locationIcon: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "near"))
@@ -93,13 +91,16 @@ class HotDetailTableViewCell: UITableViewCell {
         return view
     }()
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override func setupCell() {
         autoLayout()
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+
+    override func cleanupForReuse() {
+        numberLabel.text = nil
+        titleLabel.text = nil
+        cityLabel.text = nil
+        dateLabel.text = nil
+        exhibitionImage.image = nil
     }
     
     private func autoLayout() {
@@ -148,7 +149,7 @@ class HotDetailTableViewCell: UITableViewCell {
         titleLabel.text = title
         cityLabel.text = location
         dateLabel.text = date
-        // 使用統一的圖片載入方法
-        exhibitionImage.loadImage(from: image)
+        // 使用 BaseCell 的圖片載入方法
+        loadImage(from: image, into: exhibitionImage)
     }
 }

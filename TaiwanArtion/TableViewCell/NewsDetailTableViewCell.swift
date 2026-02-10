@@ -7,10 +7,8 @@
 
 import UIKit
 
-class NewsDetailTableViewCell: UITableViewCell {
-    
-    static let reuseIdentifier: String = "NewsDetailTableViewCell"
-    
+class NewsDetailTableViewCell: BaseTableViewCell {
+
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)

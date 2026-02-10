@@ -8,10 +8,8 @@
 import UIKit
 import SnapKit
 
-class NotifyTableViewCell: UITableViewCell {
-    
-    static let reuseIdentifier: String = "NotifyTableViewCell"
-    
+class NotifyTableViewCell: BaseTableViewCell {
+
     private let backgroundWhiteGrayView: UIView = {
         let view = UIView()
         view.backgroundColor = .whiteGrayColor

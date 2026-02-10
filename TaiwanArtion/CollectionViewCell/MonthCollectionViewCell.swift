@@ -7,22 +7,20 @@
 
 import UIKit
 
-class MonthCollectionViewCell: UICollectionViewCell {
-    
-    static let reuseIdentifier: String = "MonthCollectionViewCell"
-    
+class MonthCollectionViewCell: BaseCollectionViewCell {
+
     private let monthLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
-    
+
     private let englishMonthLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
         return label
     }()
-    
+
     private lazy var monthStack: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [monthLabel, englishMonthLabel])
         stackView.axis = .vertical
@@ -31,16 +29,19 @@ class MonthCollectionViewCell: UICollectionViewCell {
         stackView.spacing = 2
         return stackView
     }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+
+    override func setupCell() {
         autoLayout()
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+
+    override func cleanupForReuse() {
+        monthLabel.text = nil
+        englishMonthLabel.text = nil
+        monthStack.backgroundColor = .white
+        monthLabel.textColor = .brownTitleColor
+        englishMonthLabel.textColor = .grayTextColor
     }
-    
+
     private func autoLayout() {
         addSubview(monthStack)
         monthStack.snp.makeConstraints { make in
@@ -48,20 +49,20 @@ class MonthCollectionViewCell: UICollectionViewCell {
         }
         monthStack.roundCorners(cornerRadius: 4)
     }
-    
+
     func configureLabel(month: Month, selected: Bool) {
         monthLabel.text = "\(month.numberText)月"
         englishMonthLabel.text = month.englishText
         selected ? configureSelectedMonthStack() : configureMonthStack()
     }
-    
+
     //一般模式
     private func configureMonthStack() {
         monthStack.backgroundColor = .white
         monthLabel.textColor = .brownTitleColor
         englishMonthLabel.textColor = .grayTextColor
     }
-    
+
     //點按模式
     private func configureSelectedMonthStack() {
         monthStack.backgroundColor = .brownTitleColor

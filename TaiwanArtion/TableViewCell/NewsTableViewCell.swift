@@ -10,15 +10,11 @@ import RxSwift
 import RxCocoa
 import RxRelay
 
-class NewsTableViewCell: UITableViewCell {
-    
-    static let reuseIdentifier: String = "NewsTableViewCell"
-    
+class NewsTableViewCell: BaseTableViewCell {
+
     private let viewModel = HomeViewModel.shared
-    
+
     var pushToViewController: ((News) -> Void)?
-    
-    private let disposeBag = DisposeBag()
     
     private let collectionView: UICollectionView = {
        let flowLayout = UICollectionViewFlowLayout()
@@ -32,14 +28,13 @@ class NewsTableViewCell: UITableViewCell {
         return collectionView
     }()
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override func setupCell() {
         autoLayout()
         setDelegate()
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+
+    override func cleanupForReuse() {
+        pushToViewController = nil
     }
     
     private func setDelegate() {

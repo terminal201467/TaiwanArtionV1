@@ -11,15 +11,11 @@ import RxSwift
 import RxCocoa
 import RxRelay
 
-class MainPhotosTableViewCell: UITableViewCell {
-    
-    static let reuseIdentifier: String = "MainPhotosTableViewCell"
-    
+class MainPhotosTableViewCell: BaseTableViewCell {
+
     var mainPhotos: [ExhibitionInfo] = []
-    
+
     private var photoObservable: Observable<[ExhibitionInfo]> { Observable.just(mainPhotos) }
-    
-    private let disposeBag = DisposeBag()
     
     var pushToViewController: ((ExhibitionInfo) -> Void)?
     
@@ -44,15 +40,15 @@ class MainPhotosTableViewCell: UITableViewCell {
     
     private let mainDotfooterView = MainDotBarFooterView()
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override func setupCell() {
         setCollectionViewBinding()
         autoLayout()
         setDotView()
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+
+    override func cleanupForReuse() {
+        mainPhotos = []
+        pushToViewController = nil
     }
     
     private func setCollectionViewBinding() {
@@ -71,8 +67,8 @@ class MainPhotosTableViewCell: UITableViewCell {
     }
     
     private func setDotView() {
-        mainDotfooterView.currentDotIndex = { index in
-            self.collectionView.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: true)
+        mainDotfooterView.currentDotIndex = { [weak self] index in
+            self?.collectionView.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: true)
         }
     }
     

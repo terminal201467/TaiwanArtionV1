@@ -12,12 +12,8 @@ import RxCocoa
 import RxRelay
 import Kingfisher
 
-class MainPhotosCollectionViewCell: UICollectionViewCell {
-    
-    static let reuseIdentifier: String = "MainPhotosCollectionViewCell"
-    
-    private let disposeBag = DisposeBag()
-    
+class MainPhotosCollectionViewCell: BaseCollectionViewCell {
+
     private var collectedOrNot: Bool = false
     
     private let exhibitionImage: UIImageView = {
@@ -81,14 +77,18 @@ class MainPhotosCollectionViewCell: UICollectionViewCell {
         return view
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override func setupCell() {
         autoLayout()
         setCollectButton()
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+
+    override func cleanupForReuse() {
+        collectedOrNot = false
+        collectButton.setImage(UIImage(named: "collect"), for: .normal)
+        exhibitionImage.image = nil
+        titleLabel.text = nil
+        dateLabel.text = nil
+        tagLabel.text = nil
     }
     
     private func autoLayout() {
@@ -139,16 +139,17 @@ class MainPhotosCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(item: ExhibitionInfo) {
-        // 使用統一的圖片載入方法
-        exhibitionImage.loadImage(from: item.image)
+        // 使用 BaseCell 的圖片載入方法
+        loadImage(from: item.image, into: exhibitionImage)
         titleLabel.text = item.title
         dateLabel.text = item.dateString
         tagLabel.text = item.tag
     }
-    
+
     private func setCollectButton() {
         collectButton.rx.tap
-            .subscribe(onNext: {
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
                 self.collectedOrNot.toggle()
                 self.collected()
             })

@@ -10,19 +10,15 @@ import RxSwift
 import RxCocoa
 import Kingfisher
 
-class NearExhibitionDetailTableViewCell: UITableViewCell {
+class NearExhibitionDetailTableViewCell: BaseTableViewCell {
 
     var likeActionSignal: Signal<Void> = Signal.just(())
-    
+
     private var isLiked: Bool = false {
         didSet {
             self.setLikeButton()
         }
     }
-    
-    private let disposeBag = DisposeBag()
-    
-    static let reuseIdentifier: String = "NearExhibitionDetailTableViewCell"
     
     private let contentMainImage: UIImageView = {
         let imageView = UIImageView()
@@ -132,14 +128,21 @@ class NearExhibitionDetailTableViewCell: UITableViewCell {
         return view
     }()
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override func setupCell() {
         autoLayout()
         setLikeButton()
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+
+    override func cleanupForReuse() {
+        isLiked = false
+        likeButton.setImage(UIImage(named: "collect"), for: .normal)
+        contentMainImage.image = nil
+        tagLabel.text = nil
+        titleLabel.text = nil
+        timeLabel.text = nil
+        locationLabel.text = nil
+        starEvaluatelabel.text = nil
+        evaluateLabel.text = nil
     }
     
     private func autoLayout() {
@@ -243,8 +246,8 @@ class NearExhibitionDetailTableViewCell: UITableViewCell {
     
     //細節內容
     func detailConfigure(with info: ExhibitionInfo) {
-        // 使用統一的圖片載入方法
-        contentMainImage.loadImage(from: info.image)
+        // 使用 BaseCell 的圖片載入方法
+        loadImage(from: info.image, into: contentMainImage)
         titleLabel.text = info.title
         timeLabel.text = info.dateString
         tagLabel.text = info.tag

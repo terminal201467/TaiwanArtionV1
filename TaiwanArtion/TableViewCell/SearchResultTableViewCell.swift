@@ -9,13 +9,9 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class SearchResultTableViewCell: UITableViewCell {
-    
-    static let reuseIdentifier: String = "SearchResultTableViewCell"
+class SearchResultTableViewCell: BaseTableViewCell {
 
     var collectAction: (() -> Void)?
-    
-    private let disposeBag = DisposeBag()
     
     //MARK: - Images
     private let mainImage: UIImageView = {
@@ -125,14 +121,21 @@ class SearchResultTableViewCell: UITableViewCell {
         return stackView
     }()
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override func setupCell() {
         autoLayout()
         setCollectButton()
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+
+    override func cleanupForReuse() {
+        mainImage.image = nil
+        tagLabel.text = nil
+        titleLabel.text = nil
+        dateLabel.text = nil
+        cityLabel.text = nil
+        starCountLabel.text = nil
+        commentLabel.text = nil
+        collectButton.setImage(UIImage(named: "collect"), for: .normal)
+        collectAction = nil
     }
     
     private func autoLayout() {
@@ -202,8 +205,8 @@ class SearchResultTableViewCell: UITableViewCell {
     
     private func setCollectButton() {
         collectButton.rx.tap
-            .subscribe(onNext: {
-                self.collectAction?()
+            .subscribe(onNext: { [weak self] in
+                self?.collectAction?()
             })
             .disposed(by: disposeBag)
     }

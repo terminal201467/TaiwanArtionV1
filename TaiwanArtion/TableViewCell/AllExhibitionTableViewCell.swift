@@ -10,11 +10,7 @@ import RxSwift
 import RxCocoa
 import RxRelay
 
-class AllExhibitionTableViewCell: UITableViewCell {
-
-    static let reuseIdentifier: String = "AllExhibitionTableViewCell"
-
-    private let disposeBag = DisposeBag()
+class AllExhibitionTableViewCell: BaseTableViewCell {
 
     private let viewModel = HomeViewModel.shared
 
@@ -40,14 +36,14 @@ class AllExhibitionTableViewCell: UITableViewCell {
         return collectionView
     }()
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override func setupCell() {
         setCollectionViewBinding()
         autoLayout()
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    override func cleanupForReuse() {
+        pushToViewController = nil
+        loadMoreAction = nil
     }
 
     private func setCollectionViewBinding() {

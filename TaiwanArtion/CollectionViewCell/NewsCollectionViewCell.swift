@@ -8,9 +8,7 @@
 import UIKit
 import Kingfisher
 
-class NewsCollectionViewCell: UICollectionViewCell {
-    
-    static let reuseIdentifier: String = "NewsCollectionViewCell"
+class NewsCollectionViewCell: BaseCollectionViewCell {
     
     private let mainImage: UIImageView = {
         let imageView = UIImageView()
@@ -46,13 +44,14 @@ class NewsCollectionViewCell: UICollectionViewCell {
         return stackView
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override func setupCell() {
         autoLayout()
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+
+    override func cleanupForReuse() {
+        mainImage.image = nil
+        titleLabel.text = nil
+        subTitleLabel.text = nil
     }
     
     private func autoLayout() {
@@ -74,8 +73,8 @@ class NewsCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(image: String, title: String, date: String, author: String) {
-        // 使用統一的圖片載入方法
-        mainImage.loadImage(from: image)
+        // 使用 BaseCell 的圖片載入方法
+        loadImage(from: image, into: mainImage)
         titleLabel.text = title
         subTitleLabel.text = "\(date)|\(author)"
     }
