@@ -156,25 +156,27 @@ class NearViewModel: NearInputOutputType, NearViewModelInput, NearViewModelOutpu
     init(exhibitionRepository: ExhibitionRepository = FirebaseExhibitionRepository()) {
         self.exhibitionRepository = exhibitionRepository
         storeSearchRecordsSubject
-            .subscribe(onNext: {
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
                 self.storeSearchHistory(history: [self.inputSearchKeyword.value])
             })
             .disposed(by: disposeBag)
-        
+
         outputSearchHistory.accept(getSearchHistory() ?? [])
-        
+
         inputNearExhibitionHall
-            .subscribe(onNext: { mapItems in
+            .subscribe(onNext: { [weak self] mapItems in
+                guard let self = self else { return }
                 self.outputMapItem.accept(mapItems)
                 self.outputExhibitionHall.accept(self.transferExhibition(mapItems: mapItems))
             })
             .disposed(by: disposeBag)
-        
+
         outputSelectedAnnotation = inputSelectedAnnotation
-        
+
         ///這邊的資料是全部的資料，是沒有經過附近5000M推算的
-        getFirebaseExhibitionInfo(count: 20) { infos in
-            self.outputExhibitionInfo.accept(infos)
+        getFirebaseExhibitionInfo(count: 20) { [weak self] infos in
+            self?.outputExhibitionInfo.accept(infos)
         }
 //        outputExhibitionInfo.accept(getNearCurrentExhibition(count: 20))
     }

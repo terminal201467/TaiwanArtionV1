@@ -63,35 +63,36 @@ class SettingHeadViewModel: SettingHeadViewModelInput, SettingHeadViewModelOutpu
     init() {
         //input
         inputCellForRowAt
-            .subscribe { indexPath in
-                self.cellForRowAt(indexPath: indexPath)
+            .subscribe { [weak self] indexPath in
+                self?.cellForRowAt(indexPath: indexPath)
             }
             .disposed(by: disposeBag)
-        
+
         selectedHeadImageIndex
-            .subscribe(onNext: { indexPath in
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self = self else { return }
                 self.storeHead.accept(self.headImagesObservable.value[indexPath.row])
                 self.currentPhotoIndexPath = indexPath
                 self.isAllowSelected()
             })
             .disposed(by: disposeBag)
-        
+
         selectedNewPhoto
-            .subscribe(onNext: { image in
-                self.storeHead.accept(image)
+            .subscribe(onNext: { [weak self] image in
+                self?.storeHead.accept(image)
             })
             .disposed(by: disposeBag)
-        
+
         savePhoto.subscribe(onNext: {
             //這邊儲存進本地端的照片
             AppLogger.debug("savePhoto", category: .viewModel)
             //存進去Firebase
         })
         .disposed(by: disposeBag)
-        
+
         resetHead
-            .subscribe(onNext: {
-                self.resetSelected()
+            .subscribe(onNext: { [weak self] in
+                self?.resetSelected()
             })
             .disposed(by: disposeBag)
         

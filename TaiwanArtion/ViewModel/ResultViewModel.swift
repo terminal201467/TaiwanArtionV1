@@ -91,14 +91,15 @@ class ResultViewModel: ResultInputOutputType, ResultInput, ResultOutput {
     private var storeExhibitionHalls: [ExhibitionHallInfo] = []
     
     init() {
-        textEditingRelay.subscribe(onNext: { text in
-            self.searchText = text
+        textEditingRelay.subscribe(onNext: { [weak self] text in
+            self?.searchText = text
         })
         .disposed(by: disposeBag)
     }
-    
+
     private func setSearchFilterType(with: String) {
-        currentMenuRelay.subscribe(onNext: { currentMenu in
+        currentMenuRelay.subscribe(onNext: { [weak self] currentMenu in
+            guard let self = self else { return }
             switch currentMenu {
             case .collectExhibition:
                 let exhibitionInfo = self.filterSearchExhibitionHistory(searchText: self.searchText)

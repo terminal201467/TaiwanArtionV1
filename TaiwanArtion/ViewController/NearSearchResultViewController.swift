@@ -28,8 +28,8 @@ class NearSearchResultViewController: UIViewController {
         setSearchTextField()
         setSearchHistory()
         viewModel.output.outputSearchHistory
-            .subscribe(onNext: { historyInfos in
-                self.nearSearchReaultView.configure(historys: historyInfos)
+            .subscribe(onNext: { [weak self] historyInfos in
+                self?.nearSearchReaultView.configure(historys: historyInfos)
             })
             .disposed(by: disposeBag)
     }
@@ -44,9 +44,9 @@ class NearSearchResultViewController: UIViewController {
     
     private func setSearchHistory() {
         viewModel.output.outputSearchHistory
-            .subscribe(onNext: { historyInfos in
+            .subscribe(onNext: { [weak self] historyInfos in
                 AppLogger.debug("historys:\(historyInfos)", category: .ui)
-                self.nearSearchReaultView.configure(historys: historyInfos)
+                self?.nearSearchReaultView.configure(historys: historyInfos)
             })
             .disposed(by: disposeBag)
     }

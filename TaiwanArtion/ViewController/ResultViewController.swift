@@ -41,8 +41,8 @@ class ResultViewController: UIViewController {
         setNavigationBar()
         setSearchTextField()
         viewModel.output.currentExhibitionMenu
-            .subscribe(onNext: { menu in
-                self.setViewInContainer(by: menu.rawValue)
+            .subscribe(onNext: { [weak self] menu in
+                self?.setViewInContainer(by: menu.rawValue)
             })
             .disposed(by: disposeBag)
     }
@@ -75,9 +75,9 @@ class ResultViewController: UIViewController {
         resultView.removeAllSubviews(from: resultView.containerView)
         switch CollectMenu(rawValue: menuOrder) {
         case .collectExhibition:
-            viewModel.output.storeHistoryObservable.subscribe(onNext: { historys in
+            viewModel.output.storeHistoryObservable.subscribe(onNext: { [weak self] historys in
                 AppLogger.debug("history:\(historys)", category: .ui)
-                self.searchHistoryView = SearchingHistoryView(frame: .zero, historys: historys.map{$0.title}, type: .exhibitionNothingSearch)
+                self?.searchHistoryView = SearchingHistoryView(frame: .zero, historys: historys.map{$0.title}, type: .exhibitionNothingSearch)
             })
             .disposed(by: disposeBag)
             if let view = searchHistoryView {
@@ -87,9 +87,9 @@ class ResultViewController: UIViewController {
                 }
             }
         case .collectExhibitionHall:
-            viewModel.output.storeExhibitionHallObservable.subscribe(onNext: { hallInfos in
+            viewModel.output.storeExhibitionHallObservable.subscribe(onNext: { [weak self] hallInfos in
                 AppLogger.debug("hallInfo:\(hallInfos)", category: .ui)
-                self.searchHistoryView = SearchingHistoryView(frame: .zero, historys: hallInfos.map{$0.title}, type: .exhibitionHallNothingSearch)
+                self?.searchHistoryView = SearchingHistoryView(frame: .zero, historys: hallInfos.map{$0.title}, type: .exhibitionHallNothingSearch)
             })
             .disposed(by: disposeBag)
             if let view = searchHistoryView {
@@ -99,9 +99,9 @@ class ResultViewController: UIViewController {
                 }
             }
         case .collectNews:
-            viewModel.output.storeNewsObservable.subscribe(onNext: { news in
+            viewModel.output.storeNewsObservable.subscribe(onNext: { [weak self] news in
                 AppLogger.debug("news:\(news)", category: .ui)
-                self.searchHistoryView = SearchingHistoryView(frame: .zero, historys: news.map{$0.title}, type: .newsNothingSearch)
+                self?.searchHistoryView = SearchingHistoryView(frame: .zero, historys: news.map{$0.title}, type: .newsNothingSearch)
             })
             .disposed(by: disposeBag)
             if let view = searchHistoryView {

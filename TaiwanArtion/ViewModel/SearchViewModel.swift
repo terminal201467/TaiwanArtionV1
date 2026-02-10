@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import RxSwift
+import RxCocoa
+import RxRelay
 
 enum FilterType: Int, CaseIterable {
     case city = 0, place, date, price
@@ -31,66 +34,194 @@ enum AlreadyFilter: Int, CaseIterable {
     }
 }
 
+// MARK: - Input Protocol
 
-class SearchViewModel {
-    
-    //MARK: - data
-    
+public protocol SearchViewModelInput: AnyObject {
+    var searchTextInput: PublishRelay<String> { get }
+    var searchModeChanged: PublishRelay<Bool> { get }
+    var filterSelected: PublishRelay<Int> { get }
+    var collectionItemSelected: PublishRelay<IndexPath> { get }
+    var tableItemSelected: PublishRelay<IndexPath> { get }
+}
+
+// MARK: - Output Protocol
+
+public protocol SearchViewModelOutput: AnyObject {
+    var searchResultsRelay: BehaviorRelay<[ExhibitionInfo]> { get }
+    var searchHistoryRelay: BehaviorRelay<[String]> { get }
+    var isSearchingRelay: BehaviorRelay<Bool> { get }
+    var currentFilterRelay: BehaviorRelay<Int?> { get }
+    var hotSearchRelay: BehaviorRelay<[String]> { get }
+}
+
+public protocol SearchViewModelType: AnyObject {
+    var inputs: SearchViewModelInput { get }
+    var outputs: SearchViewModelOutput { get }
+}
+
+// MARK: - SearchViewModel
+
+class SearchViewModel: SearchViewModelType, SearchViewModelInput, SearchViewModelOutput {
+
+    // MARK: - Singleton (保留向後相容，建議使用依賴注入)
     static let shared = SearchViewModel()
-    
-    private var store: [ExhibitionInfo] = [
-        ExhibitionInfo(title: "未來身體-超自然雕塑", image: "noIdea", tag: "雕塑", dateString: "2023.05.18 - 05.20", time: "", agency: "", official: "", telephone: "00427022969", advanceTicketPrice: "199", unanimousVotePrice: "199", studentPrice: "199", groupPrice: "199", lovePrice: "199", free: "199", earlyBirdPrice: "199", city: "台南市", location: "台南市", address: "", equipments: ["","","",""], latitude: "", longtitude: "", evaluation: .init(number: 0, allCommentCount: 0, allCommentStar: 0, allCommentRate: [.init(contentRichness: 0, equipment: 0, geoLocation: 0, price: 0, service: 0)], allCommentContents: [.init(userImage: "", userName: "", star: 0, commentDate: "", commentRate: [.init(contentRichness: 0, equipment: 0, geoLocation: 0, price: 0, service: 0)])])),
-        ExhibitionInfo(title: "未來身體-超自然雕塑", image: "noIdea", tag: "雕塑", dateString: "2023.05.18 - 05.20", time: "", agency: "", official: "", telephone: "00427022969", advanceTicketPrice: "199", unanimousVotePrice: "199", studentPrice: "199", groupPrice: "199", lovePrice: "199", free: "199", earlyBirdPrice: "199", city: "台南市", location: "台南市", address: "", equipments: ["","","",""], latitude: "", longtitude: "", evaluation: .init(number: 0, allCommentCount: 0, allCommentStar: 0, allCommentRate: [.init(contentRichness: 0, equipment: 0, geoLocation: 0, price: 0, service: 0)], allCommentContents: [.init(userImage: "", userName: "", star: 0, commentDate: "", commentRate: [.init(contentRichness: 0, equipment: 0, geoLocation: 0, price: 0, service: 0)])])),
-        ExhibitionInfo(title: "未來身體-超自然雕塑", image: "noIdea", tag: "雕塑", dateString: "2023.05.18 - 05.20", time: "", agency: "", official: "", telephone: "00427022969", advanceTicketPrice: "199", unanimousVotePrice: "199", studentPrice: "199", groupPrice: "199", lovePrice: "199", free: "199", earlyBirdPrice: "199", city: "台南市", location: "台南市", address: "", equipments: ["","","",""], latitude: "", longtitude: "", evaluation: .init(number: 0, allCommentCount: 0, allCommentStar: 0, allCommentRate: [.init(contentRichness: 0, equipment: 0, geoLocation: 0, price: 0, service: 0)], allCommentContents: [.init(userImage: "", userName: "", star: 0, commentDate: "", commentRate: [.init(contentRichness: 0, equipment: 0, geoLocation: 0, price: 0, service: 0)])]))
-    ]
-    
-    private var filterStore: [ExhibitionInfo] = []
-    
-    private var hotSearch: [String] = ["小王子","悲慘世界","久石讓","貓之日","蒙娜麗莎的探險之旅"]
-    
+
+    // MARK: - Dependencies
+    private let exhibitionRepository: ExhibitionRepository
+    private let disposeBag = DisposeBag()
+
+    // MARK: - Input
+    let searchTextInput = PublishRelay<String>()
+    let searchModeChanged = PublishRelay<Bool>()
+    let filterSelected = PublishRelay<Int>()
+    let collectionItemSelected = PublishRelay<IndexPath>()
+    let tableItemSelected = PublishRelay<IndexPath>()
+
+    // MARK: - Output
+    let searchResultsRelay = BehaviorRelay<[ExhibitionInfo]>(value: [])
+    let searchHistoryRelay = BehaviorRelay<[String]>(value: [])
+    let isSearchingRelay = BehaviorRelay<Bool>(value: false)
+    let currentFilterRelay = BehaviorRelay<Int?>(value: nil)
+    let hotSearchRelay = BehaviorRelay<[String]>(value: ["小王子", "悲慘世界", "久石讓", "貓之日", "蒙娜麗莎的探險之旅"])
+
+    // MARK: - Input/Output
+    var inputs: SearchViewModelInput { self }
+    var outputs: SearchViewModelOutput { self }
+
+    // MARK: - Private State
     private var isSearchModeOn: Bool = false {
         didSet {
             restartTheCurrentItem()
         }
     }
-    
-    var getCurrentItem : ((Int?) -> (Void))?
-    
+
     private var currentItem: Int? {
         didSet {
             AppLogger.debug("currentItem:\(String(describing: currentItem))", category: .viewModel)
-            self.getCurrentItem?(currentItem)
-            //清空選的
+            currentFilterRelay.accept(currentItem)
         }
     }
-    
-    //MARK: -SearchAction
-    func filterSearchTextFiled(withText searchText: String) {
-        AppLogger.debug("input SearchFilter:\(searchText)", category: .viewModel)
-        let filterResult = store.filter{$0.title.contains(searchText)}
-        AppLogger.debug("filterResult:\(filterResult)", category: .viewModel)
-        filterStore = filterResult
+
+    // MARK: - Legacy Callback (向後相容)
+    var getCurrentItem: ((Int?) -> Void)?
+
+    // MARK: - Initialization
+
+    init(exhibitionRepository: ExhibitionRepository = FirebaseExhibitionRepository()) {
+        self.exhibitionRepository = exhibitionRepository
+        setupBindings()
     }
-    
-    //MARK: -CurrentItems
+
+    private func setupBindings() {
+        // 搜尋文字輸入 - 防抖動 300ms
+        searchTextInput
+            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] keyword in
+                guard let self = self else { return }
+                self.performSearch(keyword: keyword)
+            })
+            .disposed(by: disposeBag)
+
+        // 搜尋模式切換
+        searchModeChanged
+            .subscribe(onNext: { [weak self] isSearching in
+                guard let self = self else { return }
+                self.isSearchModeOn = isSearching
+                self.isSearchingRelay.accept(isSearching)
+                AppLogger.debug("isSearchModeOn:\(isSearching)", category: .viewModel)
+            })
+            .disposed(by: disposeBag)
+
+        // 篩選器選擇
+        filterSelected
+            .subscribe(onNext: { [weak self] index in
+                guard let self = self else { return }
+                self.currentItem = index
+            })
+            .disposed(by: disposeBag)
+
+        // CollectionView 選擇
+        collectionItemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self = self else { return }
+                self.currentItem = indexPath.row
+                AppLogger.debug("collectionViewDidSelectedRowAt:\(String(describing: self.currentItem))", category: .viewModel)
+            })
+            .disposed(by: disposeBag)
+
+        // 當 currentFilter 變化時通知 legacy callback
+        currentFilterRelay
+            .subscribe(onNext: { [weak self] item in
+                self?.getCurrentItem?(item)
+            })
+            .disposed(by: disposeBag)
+    }
+
+    // MARK: - Search
+
+    private func performSearch(keyword: String) {
+        guard !keyword.isEmpty else {
+            searchResultsRelay.accept([])
+            return
+        }
+
+        AppLogger.debug("input SearchFilter:\(keyword)", category: .viewModel)
+
+        // 添加到搜尋歷史
+        addToSearchHistory(keyword)
+
+        // 執行搜尋
+        exhibitionRepository.searchExhibitions(keyword: keyword) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let exhibitions):
+                AppLogger.debug("filterResult: \(exhibitions.count) items", category: .viewModel)
+                self.searchResultsRelay.accept(exhibitions)
+            case .failure(let error):
+                AppLogger.error("搜尋失敗", category: .viewModel, error: error)
+                self.searchResultsRelay.accept([])
+            }
+        }
+    }
+
+    private func addToSearchHistory(_ keyword: String) {
+        var history = searchHistoryRelay.value
+        // 移除重複
+        history.removeAll { $0 == keyword }
+        // 插入到開頭
+        history.insert(keyword, at: 0)
+        // 限制最多 10 個
+        if history.count > 10 {
+            history = Array(history.prefix(10))
+        }
+        searchHistoryRelay.accept(history)
+    }
+
+    // MARK: - Legacy Methods (向後相容)
+
+    func filterSearchTextFiled(withText searchText: String) {
+        searchTextInput.accept(searchText)
+    }
+
     public func restartTheCurrentItem() {
         currentItem = nil
     }
-    
+
     public func changedModeWith(isSearching: Bool) {
-        isSearchModeOn = isSearching
-        AppLogger.debug("isSearchModeOn:\(isSearchModeOn)", category: .viewModel)
+        searchModeChanged.accept(isSearching)
     }
-    
+
     public func changeCurrentItem(by itemIndex: Int) {
-        currentItem = itemIndex
+        filterSelected.accept(itemIndex)
     }
-    
-    //MARK: - CollectionView methods
+
+    // MARK: - CollectionView Methods
+
     func collectionViewNumberOfRowInSection(section: Int) -> Int {
         return isSearchModeOn ? AlreadyFilter.allCases.count : FilterType.allCases.count
     }
-    
+
     func collectionViewCellForRowAt(indexPath: IndexPath) -> (title: String, isSelected: Bool?) {
         if isSearchModeOn {
             if currentItem == nil {
@@ -108,20 +239,17 @@ class SearchViewModel {
             }
         }
     }
-    
+
     func collectionViewDidSelectedRowAt(indexPath: IndexPath) {
-        currentItem = indexPath.row
-        AppLogger.debug("collectionViewDidSelectedRowAt:\(String(describing: currentItem))", category: .viewModel)
+        collectionItemSelected.accept(indexPath)
     }
-    
-    //Selected CollectionView
+
     func selectedCollectionViewAllCell(bySection section: Int) {
         AppLogger.debug("全選TableViewSection:\(section)", category: .viewModel)
-
     }
-    
-    //MARK: - TableView methods
-    
+
+    // MARK: - TableView Methods
+
     func numberOfSection() -> Int {
         if isSearchModeOn {
             AppLogger.debug("isSearchModeOn:\(isSearchModeOn)", category: .viewModel)
@@ -150,7 +278,7 @@ class SearchViewModel {
             }
         }
     }
-    
+
     func searchModeTableViewNumberOfRowInSection(section: Int) -> Int {
         switch AlreadyFilter(rawValue: section) {
         case .result: return 1
@@ -160,7 +288,7 @@ class SearchViewModel {
         case .none: return 1
         }
     }
-    
+
     func unSearchModeTableViewNumberOfRowInSection(section: Int) -> Int {
         if currentItem != nil {
             switch FilterType(rawValue: currentItem!) {
@@ -171,48 +299,38 @@ class SearchViewModel {
             case .none: return 1
             }
         } else {
-            //hot search
             return 1
         }
     }
-    
+
     func searchModeTableViewCellForRowAt(indexPath: IndexPath) -> [ExhibitionInfo] {
-        currentItem = 0
-        switch AlreadyFilter(rawValue: currentItem!) {
-        case .result: return filterStore
-        case .news: return filterStore
-        case .nearest: return filterStore
-        case .filterIcon: return filterStore
-        case .none: return filterStore
-        }
+        return searchResultsRelay.value
     }
-    
+
     func unSearchModeTableViewCellForRowAt(indexPath: IndexPath) -> [String] {
         if currentItem == nil {
-            return hotSearch.map {$0}
+            return hotSearchRelay.value
         } else {
             switch FilterType(rawValue: currentItem!) {
             case .city:
                 switch Area(rawValue: indexPath.section) {
-                case .north: return NorthernCity.allCases.map{$0.text}
-                case .middle: return CentralCity.allCases.map{$0.text}
-                case .south: return SouthernCity.allCases.map{$0.text}
-                case .east: return EasternCity.allCases.map{$0.text}
-                case .island: return OutlyingIslandCity.allCases.map{$0.text}
+                case .north: return NorthernCity.allCases.map { $0.text }
+                case .middle: return CentralCity.allCases.map { $0.text }
+                case .south: return SouthernCity.allCases.map { $0.text }
+                case .east: return EasternCity.allCases.map { $0.text }
+                case .island: return OutlyingIslandCity.allCases.map { $0.text }
                 case .correct: return [""]
-                case .none: return hotSearch.map {$0}
+                case .none: return hotSearchRelay.value
                 }
-            case .place: return Place.allCases.map{$0.title}
-            case .date: return DateKind.allCases.map{$0.text}
-            case .price: return Price.allCases.map{$0.text}
-            case .none: return hotSearch.map {$0}
+            case .place: return Place.allCases.map { $0.title }
+            case .date: return DateKind.allCases.map { $0.text }
+            case .price: return Price.allCases.map { $0.text }
+            case .none: return hotSearchRelay.value
             }
         }
     }
-    
+
     func tableViewDidSelectedRowAt(indexPath: IndexPath) {
-        
+        tableItemSelected.accept(indexPath)
     }
-    
-    
 }

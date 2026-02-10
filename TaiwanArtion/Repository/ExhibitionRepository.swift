@@ -20,6 +20,12 @@ protocol ExhibitionRepository {
     func getRecentExhibitions(count: Int, completion: @escaping (Result<[ExhibitionInfo], Error>) -> Void)
     func getExhibitions(month: String?, completion: @escaping (Result<[ExhibitionInfo], Error>) -> Void)
 
+    /// 搜尋展覽
+    /// - Parameters:
+    ///   - keyword: 搜尋關鍵字
+    ///   - completion: 完成回調
+    func searchExhibitions(keyword: String, completion: @escaping (Result<[ExhibitionInfo], Error>) -> Void)
+
     /// 分頁取得展覽資料
     /// - Parameters:
     ///   - pageSize: 每頁數量

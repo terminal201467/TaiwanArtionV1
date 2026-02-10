@@ -36,17 +36,20 @@ class SplashViewModel {
     private let disposeBag = DisposeBag()
     
     init() {
-        handleSelectedItem.subscribe(onNext: { item in
+        handleSelectedItem.subscribe(onNext: { [weak self] item in
+            guard let self = self else { return }
             self.toggleSelection(selectedSet: &self.selectedItems, item: item)
         })
         .disposed(by: disposeBag)
-        
-        handleSelectedIndex.subscribe(onNext: { index in
+
+        handleSelectedIndex.subscribe(onNext: { [weak self] index in
+            guard let self = self else { return }
             self.toggleSelection(selectedSet: &self.selectedIndex, item: index)
         })
         .disposed(by: disposeBag)
-        
-        sendOutHabby.subscribe(onNext: {
+
+        sendOutHabby.subscribe(onNext: { [weak self] in
+            guard let self = self else { return }
             if self.setAllowButtonTap() {
                 self.saveDataToUserDefault()
             } else {

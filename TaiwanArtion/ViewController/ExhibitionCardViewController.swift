@@ -169,8 +169,8 @@ class ExhibitionCardViewController: UIViewController {
     
     private func setBackAction() {
         exhibitionCardView.backButton.rx.tap
-            .subscribe(onNext: {
-                self.navigationController?.popViewController(animated: true)
+            .subscribe(onNext: { [weak self] in
+                self?.navigationController?.popViewController(animated: true)
             })
             .disposed(by: disposeBag)
     }

@@ -72,24 +72,26 @@ class NewsViewController: UIViewController {
     
     private func setBackAction() {
         newsView.backButton.rx.tap
-            .subscribe(onNext: {
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
                 self.backAction?()
                 self.navigationController?.popViewController(animated: true)
             })
             .disposed(by: disposeBag)
     }
-    
+
     private func setTabButtons() {
         newsView.collectButton.rx.tap
-            .subscribe(onNext: {
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
                 self.collected.toggle()
                 self.newsView.collectButton.setImage(UIImage(named: self.collected ? "love" : "collect"), for: .normal)
             })
             .disposed(by: disposeBag)
-        
+
         newsView.shareButton.rx.tap
-            .subscribe(onNext: {
-                self.shareAction?()
+            .subscribe(onNext: { [weak self] in
+                self?.shareAction?()
             })
             .disposed(by: disposeBag)
     }

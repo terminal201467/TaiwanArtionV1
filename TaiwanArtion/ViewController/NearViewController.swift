@@ -66,7 +66,8 @@ class NearViewController: UIViewController {
     }
     
     private func setNearView() {
-        nearView.filterSubject.subscribe(onNext: {
+        nearView.filterSubject.subscribe(onNext: { [weak self] in
+            guard let self = self else { return }
             self.present(self.popUpViewController, animated: true)
         })
         .disposed(by: disposeBag)

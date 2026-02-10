@@ -64,20 +64,20 @@ class CollectViewController: UIViewController {
         }
         
         viewModel.output.currentSelectedCollectMenuIndex
-            .subscribe(onNext: { menuIndex in
-                self.collectView.menu.currentMenu = menuIndex
+            .subscribe(onNext: { [weak self] menuIndex in
+                self?.collectView.menu.currentMenu = menuIndex
             })
             .disposed(by: disposeBag)
-        
-        collectView.exhibitionCollectionView.selectedTimeMenu = { menuIndex in
+
+        collectView.exhibitionCollectionView.selectedTimeMenu = { [weak self] menuIndex in
             AppLogger.debug("menuIndex:\(menuIndex)", category: .ui)
-            self.viewModel.input.currentTimeMenu.accept(menuIndex)
+            self?.viewModel.input.currentTimeMenu.accept(menuIndex)
         }
 
         viewModel.output.currentSelectedTimeMenu
-            .subscribe(onNext: { menuIndex in
+            .subscribe(onNext: { [weak self] menuIndex in
                 AppLogger.debug("menuIndex:\(menuIndex)", category: .ui)
-                self.collectView.exhibitionCollectionView.currentTimeMenuSelected = menuIndex
+                self?.collectView.exhibitionCollectionView.currentTimeMenuSelected = menuIndex
             })
             .disposed(by: disposeBag)
     }

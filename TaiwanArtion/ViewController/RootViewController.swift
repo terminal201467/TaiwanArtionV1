@@ -69,7 +69,8 @@ class RootViewController: UITabBarController {
     
     private func setPersonFileViewController() {
         userManager.output.outputIsLoginedRelay
-            .subscribe(onNext: { isLogined in
+            .subscribe(onNext: { [weak self] isLogined in
+                guard let self = self else { return }
                 AppLogger.debug("isLogined:\(isLogined)", category: .ui)
                 if isLogined {
                     //已經登入的狀態
@@ -80,7 +81,6 @@ class RootViewController: UITabBarController {
                 }
             })
             .disposed(by: disposeBag)
-        
     }
 }
 

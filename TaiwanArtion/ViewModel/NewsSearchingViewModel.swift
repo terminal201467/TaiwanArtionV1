@@ -127,28 +127,32 @@ class NewsSearchingViewModel: NewsSearchingType, NewsSearchingInput, NewsSearchi
         
         //輸入嗜好
         inputSelectHabby.asObservable()
-            .map({ habby in
+            .map({ [weak self] habby -> [News] in
+                guard let self = self else { return [] }
                 self.outputHabby.accept(habby)
                 return self.getNewsByHabby(habby: habby)
             })
             .bind(to: outputFilterNews)
             .disposed(by: disposeBag)
-        
+
         //輸入篩選條件
         inputNewsFilter.asObservable()
-            .map({ filter in
+            .map({ [weak self] filter -> [News] in
+                guard let self = self else { return [] }
                 self.outputNewsFilter.accept(filter)
                 return self.getNewsBySelected(selectedItem: filter)
             })
             .bind(to: outputFilterNews)
             .disposed(by: disposeBag)
-        
+
         //輸入文字篩選暫存歷史關鍵字
         inputSearchingText.asObservable()
-            .filter { text in
+            .filter { [weak self] text in
+                guard let self = self else { return false }
                 return (self.getSearchingHistoryFromUserDefault() ?? []).contains(text)
             }
-            .subscribe(onNext: { filteredText in
+            .subscribe(onNext: { [weak self] filteredText in
+                guard let self = self else { return }
                 var currentHistory = self.outputNewsSearchingHistory.value
                 currentHistory.append(filteredText)
                 self.outputNewsSearchingHistory.accept(currentHistory)

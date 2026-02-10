@@ -100,36 +100,37 @@ class RegisterViewModel: RegisterInputOutputType, RegisterViewModelInput, Regist
     
     init() {
         //input訂閱
-        inputPhoneNumberRelay.subscribe(onNext: { phoneNumber in
-            self.storePhoneNumber = phoneNumber
+        inputPhoneNumberRelay.subscribe(onNext: { [weak self] phoneNumber in
+            self?.storePhoneNumber = phoneNumber
         })
         .disposed(by: disposeBag)
-        
-        inputSendVerifyCodeActionSubject.subscribe(onNext: {
+
+        inputSendVerifyCodeActionSubject.subscribe(onNext: { [weak self] in
+            guard let self = self else { return }
             self.fireBaseAuth.sendMessengeVerified(byPhoneNumber: self.storePhoneNumber)
         })
         .disposed(by: disposeBag)
-        
+
         inputMessengeVerifyCodeRelay.subscribe(onNext: { code in
-            
+
         })
         .disposed(by: disposeBag)
-        
+
         inputReSendVerifyCodeSubject.subscribe(onNext: {
             AppLogger.debug("ReSend!", category: .viewModel)
         })
         .disposed(by: disposeBag)
-        
+
         inputAccountInfoRelay.subscribe(onNext: { accountText in
-            
+
         })
         .disposed(by: disposeBag)
-        
+
         inputPasswordInfoRelay.subscribe(onNext: { passwordText in
-            
+
         })
         .disposed(by: disposeBag)
-        
+
     }
     
     func getCurrentStep() -> RegisterStep {

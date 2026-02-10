@@ -97,6 +97,41 @@ class FirebaseExhibitionRepository: ExhibitionRepository {
         }
     }
 
+    // MARK: - Search
+
+    func searchExhibitions(keyword: String, completion: @escaping (Result<[ExhibitionInfo], Error>) -> Void) {
+        let cacheKey = "search_\(keyword)"
+
+        // 先檢查快取
+        if let cached = cache.getExhibitions(forKey: cacheKey) {
+            completion(.success(cached))
+            return
+        }
+
+        // 由於 Firestore 不支援全文搜尋，這裡使用本地過濾
+        // 實際應用中建議使用 Algolia 或 Elasticsearch
+        database.readDocument(month: nil) { [weak self] data, error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                let allExhibitions = data.compactMap { ExhibitionInfo.from($0) }
+                let lowercasedKeyword = keyword.lowercased()
+
+                // 搜尋標題、標籤、地點
+                let filtered = allExhibitions.filter { exhibition in
+                    exhibition.title.lowercased().contains(lowercasedKeyword) ||
+                    exhibition.tag.lowercased().contains(lowercasedKeyword) ||
+                    exhibition.location.lowercased().contains(lowercasedKeyword) ||
+                    exhibition.city.lowercased().contains(lowercasedKeyword)
+                }
+
+                // 存入快取
+                self?.cache.cacheExhibitions(filtered, forKey: cacheKey)
+                completion(.success(filtered))
+            }
+        }
+    }
+
     // MARK: - Pagination
 
     func getExhibitionsPaginated(

@@ -77,16 +77,16 @@ class HomeViewController: UIViewController {
     
     private func setButtonSubscribe() {
         homeView.searchButton.rx.tap
-            .subscribe(onNext: {
+            .subscribe(onNext: { [weak self] in
                 let viewController = SearchViewController()
-                self.navigationController?.pushViewController(viewController, animated: true)
+                self?.navigationController?.pushViewController(viewController, animated: true)
             })
             .disposed(by: disposeBag)
-        
+
         homeView.bellButton.rx.tap
-            .subscribe(onNext: {
+            .subscribe(onNext: { [weak self] in
                 let viewController = NotifyViewController()
-                self.navigationController?.pushViewController(viewController, animated: true)
+                self?.navigationController?.pushViewController(viewController, animated: true)
             })
             .disposed(by: disposeBag)
     }

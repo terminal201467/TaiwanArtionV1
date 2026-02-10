@@ -129,18 +129,18 @@ class PersonInfoViewModel: PersonInfoInput, PersonInfoOutput, PersonInfoViewMode
         }
         .disposed(by: disposeBag)
 
-        birthMonthInput.subscribe(onNext: { monthText in
+        birthMonthInput.subscribe(onNext: { [weak self] monthText in
             AppLogger.debug("monthText:\(monthText)", category: .viewModel)
-            self.monthOutput.accept(monthText)
+            self?.monthOutput.accept(monthText)
         }).disposed(by: disposeBag)
 
-        birthDateInput.subscribe(onNext: { dateText in
+        birthDateInput.subscribe(onNext: { [weak self] dateText in
             AppLogger.debug("dateText:\(dateText)", category: .viewModel)
-            self.dateOutput.accept(dateText)
+            self?.dateOutput.accept(dateText)
         }).disposed(by: disposeBag)
-        
-        birthYearIntput.subscribe(onNext: { yearText in
-            
+
+        birthYearIntput.subscribe(onNext: { [weak self] yearText in
+            _ = self // suppress unused warning
         }).disposed(by: disposeBag)
         
         emailInput.subscribe { text in

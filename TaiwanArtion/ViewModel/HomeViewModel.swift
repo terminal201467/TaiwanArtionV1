@@ -110,62 +110,64 @@ class HomeViewModel: HomeViewModelType, HomeViewModelInput, HomeViewModelOutput 
         self.newsRepository = newsRepository
         //input
         monthSelected
-            .subscribe(onNext: { indexPath in
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self = self else { return }
                 self.currentMonthsSubject.onNext(Month(rawValue: indexPath.row)!)
                 self.fetchDateKind(by: Month(rawValue: indexPath.row)!)
             })
             .disposed(by: disposeBag)
-        
+
         habbySelected
-            .subscribe(onNext: { indexPath in
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self = self else { return }
                 self.currentHabbySubject.onNext(HabbyItem(rawValue: indexPath.row))
             })
             .disposed(by: disposeBag)
-        
+
         itemSelected
-            .subscribe(onNext: { indexPath in
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self = self else { return }
                 self.currenItemSubject.onNext(Items(rawValue: indexPath.row)!)
                 self.allExhibitionSelected.onNext(indexPath)
             })
             .disposed(by: disposeBag)
         
         //主要圖像
-        fetchRecentExhibition(count: 5) { info in
-            self.mainPhotoRelay.accept(info)
-            
+        fetchRecentExhibition(count: 5) { [weak self] info in
+            self?.mainPhotoRelay.accept(info)
         }
-        
+
         //熱門展覽
-        fetchRecentExhibition(count: 8) { info in
-            self.hotExhibitionRelay.accept(info)
+        fetchRecentExhibition(count: 8) { [weak self] info in
+            self?.hotExhibitionRelay.accept(info)
         }
-        
-        
-        allExhibitionSelected.subscribe(onNext: { indexPath in
+
+        allExhibitionSelected.subscribe(onNext: { [weak self] indexPath in
+            guard let self = self else { return }
             switch Items(rawValue: indexPath.row) {
             case .newest:
-                self.fetchRecentExhibition(count: 10) { info in
-                    self.allExhibitionRelay.accept(info)
-            }
+                self.fetchRecentExhibition(count: 10) { [weak self] info in
+                    self?.allExhibitionRelay.accept(info)
+                }
             case .popular:
-                self.fetchDataHotExhibition(by: 10) { info in
-                    self.allExhibitionRelay.accept(info)
+                self.fetchDataHotExhibition(by: 10) { [weak self] info in
+                    self?.allExhibitionRelay.accept(info)
                 }
             case .highRank:
-                self.fetchDataHotExhibition(by: 10) { info in
-                    self.allExhibitionRelay.accept(info)
+                self.fetchDataHotExhibition(by: 10) { [weak self] info in
+                    self?.allExhibitionRelay.accept(info)
                 }
             case .recent:
-                self.fetchRecentExhibition(count: 10) { info in
-                    self.allExhibitionRelay.accept(info)
+                self.fetchRecentExhibition(count: 10) { [weak self] info in
+                    self?.allExhibitionRelay.accept(info)
                 }
             case .none: AppLogger.debug("none", category: .viewModel)
             }
         })
         .disposed(by: disposeBag)
-        
-        fetchDataNewsExhibition(count: 5) { info in
-            self.newsRelay.accept(info)
+
+        fetchDataNewsExhibition(count: 5) { [weak self] info in
+            self?.newsRelay.accept(info)
         }
     }
     
