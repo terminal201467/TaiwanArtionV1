@@ -77,7 +77,8 @@ class ExhibitionMapView: UIView {
         findAndStoreCenteredCellIndexPath()
         viewModel.output.outputExhibitionHall
             .asObservable()
-            .subscribe(onNext: { info in
+            .subscribe(onNext: { [weak self] info in
+                guard let self = self else { return }
                 self.setContentStackIsHidden()
                 self.locationContentCollectionView.reloadData()
             })
@@ -286,10 +287,11 @@ extension ExhibitionMapView: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard let mapAnnotation = annotation as? MapLocationPinAnnotation else { return .none}
         let dequeuedView = mapView.dequeueReusableAnnotationView(withIdentifier: MapAnnocationView.reuseIdentifier, for: annotation) as! MapAnnocationView
-        viewModel.output.outputSelectedAnnotation.subscribe(onNext: { selectedAnnotation in
-            dequeuedView.configureMarkBackground(isSelected: selectedAnnotation.coordinate == annotation.coordinate)
-        })
-        .disposed(by: disposeBag)
+        viewModel.output.outputSelectedAnnotation
+            .subscribe(onNext: { [weak dequeuedView] selectedAnnotation in
+                dequeuedView?.configureMarkBackground(isSelected: selectedAnnotation.coordinate == annotation.coordinate)
+            })
+            .disposed(by: disposeBag)
         if let index = viewModel.output.outputMapItem.value.firstIndex(where: {$0.placemark.location?.coordinate == annotation.coordinate}) {
             dequeuedView.configure(number: index + 1)
             dequeuedView.configureMarkBackground(isSelected: false)

@@ -139,8 +139,8 @@ class SearchView: UIView {
     
     private func setBackButton() {
         backButton.rx.tap
-            .subscribe(onNext: {
-                self.backAction?()
+            .subscribe(onNext: { [weak self] in
+                self?.backAction?()
             })
             .disposed(by: disposeBag)
     }

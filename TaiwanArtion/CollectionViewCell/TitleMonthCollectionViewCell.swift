@@ -55,14 +55,14 @@ class TitleMonthCollectionViewCell: UICollectionViewCell {
     
     private func setButtonAction() {
         rightArrowButton.rx.tap
-            .subscribe(onNext: {
-                self.nextMonthAction?()
+            .subscribe(onNext: { [weak self] in
+                self?.nextMonthAction?()
             })
             .disposed(by: disposeBag)
-        
+
         leftArrowButton.rx.tap
-            .subscribe(onNext: {
-                self.preMonthAction?()
+            .subscribe(onNext: { [weak self] in
+                self?.preMonthAction?()
             })
             .disposed(by: disposeBag)
     }

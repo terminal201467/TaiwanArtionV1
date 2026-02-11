@@ -108,7 +108,8 @@ class NearView: UIView {
     
     private func setButtonSubscription() {
         filterButton.rx.tap
-            .subscribe(onNext: {
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
                 self.filterButtonIsSelected.toggle()
                 self.filterSubject.onNext(())
             })

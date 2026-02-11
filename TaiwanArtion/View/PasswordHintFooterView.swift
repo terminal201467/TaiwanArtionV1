@@ -60,8 +60,8 @@ class PasswordHintFooterView: UIView {
     
     private func setButtonSubscribe() {
         forgetpasswordButton.rx.tap
-            .subscribe(onNext: {
-                self.forgetAction?()
+            .subscribe(onNext: { [weak self] in
+                self?.forgetAction?()
             })
             .disposed(by: disposeBag)
     }
