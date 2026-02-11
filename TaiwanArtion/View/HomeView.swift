@@ -80,6 +80,10 @@ class HomeView: UIView {
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
         tableView.applyShadow(color: .black, opacity: 0.3, offset: CGSize(width: 1, height: 1), radius: 4)
+        // 效能優化：預估高度減少 Auto Layout 計算
+        tableView.estimatedRowHeight = 200
+        tableView.estimatedSectionHeaderHeight = 50
+        tableView.estimatedSectionFooterHeight = 0
         return tableView
     }()
     

@@ -98,6 +98,9 @@ class SearchView: UIView {
         tableView.backgroundColor = .white
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
+        // 效能優化：預估高度減少 Auto Layout 計算
+        tableView.estimatedRowHeight = 100
+        tableView.estimatedSectionHeaderHeight = 50
         return tableView
     }()
     

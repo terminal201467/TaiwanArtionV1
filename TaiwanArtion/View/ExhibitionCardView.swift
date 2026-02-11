@@ -52,6 +52,9 @@ class ExhibitionCardView: UIView {
         tableView.allowsSelection = true
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
+        // 效能優化：預估高度減少 Auto Layout 計算
+        tableView.estimatedRowHeight = 80
+        tableView.estimatedSectionHeaderHeight = 50
         return tableView
     }()
     
