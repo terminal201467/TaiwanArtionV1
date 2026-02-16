@@ -107,11 +107,11 @@ class CollectViewModel: CollectInputOutputType, CollectInput, CollectOutput {
     
     //MARK: -Initialization
     init(
-        exhibitionRepository: ExhibitionRepository = FirebaseExhibitionRepository(),
-        newsRepository: NewsRepository = FirebaseNewsRepository()
+        exhibitionRepository: ExhibitionRepository? = nil,
+        newsRepository: NewsRepository? = nil
     ) {
-        self.exhibitionRepository = exhibitionRepository
-        self.newsRepository = newsRepository
+        self.exhibitionRepository = exhibitionRepository ?? DIContainer.shared.exhibitionRepository
+        self.newsRepository = newsRepository ?? DIContainer.shared.newsRepository
         AppLogger.enter(category: .viewModel)
 
         fetchFirebaseCollectData(by: 10) { infos in

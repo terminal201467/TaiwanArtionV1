@@ -27,7 +27,7 @@ final class NetworkMonitor {
     private(set) var connectionType: ConnectionType = .unknown
 
     /// 網路狀態變更通知名稱
-    static let networkStatusChangedNotification = Notification.Name("NetworkMonitor.statusChanged")
+    static let networkStatusChangedNotification = Foundation.Notification.Name("NetworkMonitor.statusChanged")
 
     // MARK: - Connection Type
 

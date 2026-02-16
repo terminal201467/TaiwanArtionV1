@@ -77,7 +77,7 @@ class SearchDataSource: NSObject {
     private func configureSearchModeCollectionCell(
         _ collectionView: UICollectionView,
         at indexPath: IndexPath,
-        cellInfo: (title: String, isSelected: Bool)
+        cellInfo: (title: String, isSelected: Bool?)
     ) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: SearchingCollectionViewCell.reuseIdentifier,
@@ -109,7 +109,7 @@ class SearchDataSource: NSObject {
     private func configureNormalModeCollectionCell(
         _ collectionView: UICollectionView,
         at indexPath: IndexPath,
-        cellInfo: (title: String, isSelected: Bool)
+        cellInfo: (title: String, isSelected: Bool?)
     ) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: SearchingCollectionViewCell.reuseIdentifier,

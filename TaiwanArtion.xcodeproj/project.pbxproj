@@ -7,9 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		039861751ADC0D32C2D8D540 /* AuthRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BB7C3793FF0DB4F1C11E9D /* AuthRepositoryTests.swift */; };
 		19703945C8A3DC8163F6B353 /* Pods_TaiwanArtion_TaiwanArtionUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 567A74B0FD2EDE1289E97BCF /* Pods_TaiwanArtion_TaiwanArtionUITests.framework */; };
+		1A8AB59EAD3DDC8FBC970744 /* ExhibitionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1EE7FF7C7DB6EF0459297F /* ExhibitionRepository.swift */; };
+		26C2D1CEF85D9E0FDBC58F37 /* BaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B9344BFC3DCEAA1A755098 /* BaseCollectionViewCell.swift */; };
 		312571B3EEECB9F7C5CD3B99 /* Pods_TaiwanArtionTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 014A2C7A7A3F85FF4D3CEE24 /* Pods_TaiwanArtionTests.framework */; };
+		317323A4C6C067F175C76F19 /* FirebaseNewsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E76DB26D305A554382C1E9 /* FirebaseNewsRepository.swift */; };
 		42CD7883526BCC1131AC1105 /* Pods_TaiwanArtion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6DB367E68EBB1EC1988766A /* Pods_TaiwanArtion.framework */; };
+		49B26986D19FFE40E23D54D7 /* DataCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D2DCA88EDA96DD7B437845 /* DataCache.swift */; };
+		5322F76E1816958EAF2AE9C0 /* ExhibitionInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC566CD442AB639B68A6B52A /* ExhibitionInfoView.swift */; };
+		6091CAD03AD62D7BEC119A20 /* FirebaseAuthRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F80A5483FBD9A5214F3F9E /* FirebaseAuthRepository.swift */; };
+		615010FD85AFEF9B4D9E691C /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B83D22FD0483A3C6DCF7EA /* BaseTableViewCell.swift */; };
+		6499D8C344E0A98CCD39C39E /* UIImageView+Loading.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BBCD853C1AEF77ECC8D08 /* UIImageView+Loading.swift */; };
+		72D18F37A1BFF03E475C3A35 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5927CBC4D6E90363FBD9BCF3 /* NetworkMonitor.swift */; };
+		87310B4C6672CD5D3CEE6314 /* FirebaseExhibitionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6602D56E62E529BE4B63C7C4 /* FirebaseExhibitionRepository.swift */; };
+		88DE577F7D94187CC06ADCF5 /* TagLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBF534D3647B838857C0A95 /* TagLabel.swift */; };
+		89F63CB8C461DA6E67855789 /* AuthRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D005DECADCE7A716BB23E570 /* AuthRepository.swift */; };
+		8F2A1684B2EFCF892695471D /* HeightCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2073C6474F04AE2F622866 /* HeightCache.swift */; };
+		968E20E98B78BD8FE1AA330A /* ExhibitionCardDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EB7765A70BD2ECBBC1C80F0 /* ExhibitionCardDataSource.swift */; };
 		9705E5032A4349AD00FD81D1 /* PersonalInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9705E5022A4349AD00FD81D1 /* PersonalInfoViewController.swift */; };
 		9705E5072A4AAC1300FD81D1 /* MonthAndDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9705E5062A4AAC1300FD81D1 /* MonthAndDate.swift */; };
 		9705E50D2A52E3CA00FD81D1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9705E50C2A52E3C900FD81D1 /* GoogleService-Info.plist */; };
@@ -134,6 +149,14 @@
 		9771A15E2A3AAF4A006F4F9D /* RegisterStepCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9771A15D2A3AAF4A006F4F9D /* RegisterStepCollectionViewCell.swift */; };
 		9772165D2A9F80AE00E9C5B1 /* ExhibitionCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9772165C2A9F80AE00E9C5B1 /* ExhibitionCalendarView.swift */; };
 		9772165F2A9F80D700E9C5B1 /* ExhibitionCalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9772165E2A9F80D700E9C5B1 /* ExhibitionCalendarViewModel.swift */; };
+		977285912ED9666A00F5B8AF /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9772858E2ED9666A00F5B8AF /* KeychainManager.swift */; };
+		977285922ED9666A00F5B8AF /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9772858C2ED9666A00F5B8AF /* AppLogger.swift */; };
+		977285932ED9666A00F5B8AF /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9772858A2ED9666A00F5B8AF /* AppConfig.swift */; };
+		977285962ED966E900F5B8AF /* ButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 977285942ED966E900F5B8AF /* ButtonCollectionViewCell.swift */; };
+		977285972ED966E900F5B8AF /* DateCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 977285952ED966E900F5B8AF /* DateCollectionViewCell.swift */; };
+		977285992ED9671600F5B8AF /* HabbyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 977285982ED9671600F5B8AF /* HabbyCollectionViewCell.swift */; };
+		9772859B2ED9671D00F5B8AF /* MonthCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9772859A2ED9671D00F5B8AF /* MonthCollectionViewCell.swift */; };
+		9772859D2ED967D100F5B8AF /* SelectedItemsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9772859C2ED967D100F5B8AF /* SelectedItemsCollectionViewCell.swift */; };
 		978834B52A1B892100ADBEE8 /* TitleHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978834B42A1B892100ADBEE8 /* TitleHeaderView.swift */; };
 		978834B92A1C967200ADBEE8 /* MainDotBarFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978834B82A1C967200ADBEE8 /* MainDotBarFooterView.swift */; };
 		978834BB2A1D9EE700ADBEE8 /* NewsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978834BA2A1D9EE700ADBEE8 /* NewsCollectionViewCell.swift */; };
@@ -216,6 +239,11 @@
 		97FD07192A666D0200A64808 /* ChooseHabbyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97FD07182A666D0200A64808 /* ChooseHabbyView.swift */; };
 		97FD071B2A66798700A64808 /* ChooseHabbyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97FD071A2A66798600A64808 /* ChooseHabbyViewModel.swift */; };
 		97FF7AE22AA1DE5B0090F338 /* NewsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97FF7AE12AA1DE5B0090F338 /* NewsTableViewCell.swift */; };
+		9DCBB6C523D067CCCB6535F7 /* DIContainerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55E9220B63CF8B0BBB6FE85 /* DIContainerTests.swift */; };
+		A913F5291647106E3CA5F4F7 /* DIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0EA01E1170F7DB7C68F0703 /* DIContainer.swift */; };
+		B755487E2DC6B8100B7A75BE /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F9B03716332818066BB6B9C /* SectionHeaderView.swift */; };
+		C35107DE129623891997C340 /* NewsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909355264CCD7B3FF2F11B6A /* NewsRepository.swift */; };
+		C7F135AE94A84ED71C63C5AB /* SearchDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170854A270B3E306427AF6AC /* SearchDataSource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -238,9 +266,23 @@
 /* Begin PBXFileReference section */
 		014A2C7A7A3F85FF4D3CEE24 /* Pods_TaiwanArtionTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TaiwanArtionTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		14682FC619A78F88E1CEEC95 /* Pods-TaiwanArtionTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaiwanArtionTests.debug.xcconfig"; path = "Target Support Files/Pods-TaiwanArtionTests/Pods-TaiwanArtionTests.debug.xcconfig"; sourceTree = "<group>"; };
+		170854A270B3E306427AF6AC /* SearchDataSource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchDataSource.swift; sourceTree = "<group>"; };
+		2EBF534D3647B838857C0A95 /* TagLabel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagLabel.swift; sourceTree = "<group>"; };
+		2F9B03716332818066BB6B9C /* SectionHeaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
 		32DB8B2332C019BA38D5F558 /* Pods-TaiwanArtionTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaiwanArtionTests.release.xcconfig"; path = "Target Support Files/Pods-TaiwanArtionTests/Pods-TaiwanArtionTests.release.xcconfig"; sourceTree = "<group>"; };
+		39B83D22FD0483A3C6DCF7EA /* BaseTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
+		3C2073C6474F04AE2F622866 /* HeightCache.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HeightCache.swift; sourceTree = "<group>"; };
+		42B9344BFC3DCEAA1A755098 /* BaseCollectionViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewCell.swift; sourceTree = "<group>"; };
+		4A1EE7FF7C7DB6EF0459297F /* ExhibitionRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExhibitionRepository.swift; sourceTree = "<group>"; };
 		567A74B0FD2EDE1289E97BCF /* Pods_TaiwanArtion_TaiwanArtionUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TaiwanArtion_TaiwanArtionUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5927CBC4D6E90363FBD9BCF3 /* NetworkMonitor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
+		5EB7765A70BD2ECBBC1C80F0 /* ExhibitionCardDataSource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExhibitionCardDataSource.swift; sourceTree = "<group>"; };
+		6602D56E62E529BE4B63C7C4 /* FirebaseExhibitionRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FirebaseExhibitionRepository.swift; sourceTree = "<group>"; };
 		6CDA925BDC580285C3F0BA4C /* Pods-TaiwanArtion-TaiwanArtionUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaiwanArtion-TaiwanArtionUITests.debug.xcconfig"; path = "Target Support Files/Pods-TaiwanArtion-TaiwanArtionUITests/Pods-TaiwanArtion-TaiwanArtionUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		77F80A5483FBD9A5214F3F9E /* FirebaseAuthRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FirebaseAuthRepository.swift; sourceTree = "<group>"; };
+		80E76DB26D305A554382C1E9 /* FirebaseNewsRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FirebaseNewsRepository.swift; sourceTree = "<group>"; };
+		83D2DCA88EDA96DD7B437845 /* DataCache.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DataCache.swift; sourceTree = "<group>"; };
+		909355264CCD7B3FF2F11B6A /* NewsRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NewsRepository.swift; sourceTree = "<group>"; };
 		9705E5022A4349AD00FD81D1 /* PersonalInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoViewController.swift; sourceTree = "<group>"; };
 		9705E5062A4AAC1300FD81D1 /* MonthAndDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthAndDate.swift; sourceTree = "<group>"; };
 		9705E50C2A52E3C900FD81D1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -365,6 +407,14 @@
 		9771A15D2A3AAF4A006F4F9D /* RegisterStepCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterStepCollectionViewCell.swift; sourceTree = "<group>"; };
 		9772165C2A9F80AE00E9C5B1 /* ExhibitionCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExhibitionCalendarView.swift; sourceTree = "<group>"; };
 		9772165E2A9F80D700E9C5B1 /* ExhibitionCalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExhibitionCalendarViewModel.swift; sourceTree = "<group>"; };
+		9772858A2ED9666A00F5B8AF /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
+		9772858C2ED9666A00F5B8AF /* AppLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogger.swift; sourceTree = "<group>"; };
+		9772858E2ED9666A00F5B8AF /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
+		977285942ED966E900F5B8AF /* ButtonCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonCollectionViewCell.swift; sourceTree = "<group>"; };
+		977285952ED966E900F5B8AF /* DateCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateCollectionViewCell.swift; sourceTree = "<group>"; };
+		977285982ED9671600F5B8AF /* HabbyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabbyCollectionViewCell.swift; sourceTree = "<group>"; };
+		9772859A2ED9671D00F5B8AF /* MonthCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthCollectionViewCell.swift; sourceTree = "<group>"; };
+		9772859C2ED967D100F5B8AF /* SelectedItemsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedItemsCollectionViewCell.swift; sourceTree = "<group>"; };
 		978834B42A1B892100ADBEE8 /* TitleHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleHeaderView.swift; sourceTree = "<group>"; };
 		978834B82A1C967200ADBEE8 /* MainDotBarFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainDotBarFooterView.swift; sourceTree = "<group>"; };
 		978834BA2A1D9EE700ADBEE8 /* NewsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -474,10 +524,16 @@
 		97FD07182A666D0200A64808 /* ChooseHabbyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseHabbyView.swift; sourceTree = "<group>"; };
 		97FD071A2A66798600A64808 /* ChooseHabbyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseHabbyViewModel.swift; sourceTree = "<group>"; };
 		97FF7AE12AA1DE5B0090F338 /* NewsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsTableViewCell.swift; sourceTree = "<group>"; };
+		A90BBCD853C1AEF77ECC8D08 /* UIImageView+Loading.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImageView+Loading.swift"; sourceTree = "<group>"; };
 		C08E8E419B4D485FD3769595 /* Pods-TaiwanArtion.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaiwanArtion.release.xcconfig"; path = "Target Support Files/Pods-TaiwanArtion/Pods-TaiwanArtion.release.xcconfig"; sourceTree = "<group>"; };
 		C44A9F25A18373C8BF9B8EA9 /* Pods-TaiwanArtion-TaiwanArtionUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaiwanArtion-TaiwanArtionUITests.release.xcconfig"; path = "Target Support Files/Pods-TaiwanArtion-TaiwanArtionUITests/Pods-TaiwanArtion-TaiwanArtionUITests.release.xcconfig"; sourceTree = "<group>"; };
+		C55E9220B63CF8B0BBB6FE85 /* DIContainerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DIContainerTests.swift; sourceTree = "<group>"; };
 		CB247D84AA40C78F18BC6E21 /* Pods-TaiwanArtion.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaiwanArtion.debug.xcconfig"; path = "Target Support Files/Pods-TaiwanArtion/Pods-TaiwanArtion.debug.xcconfig"; sourceTree = "<group>"; };
+		D005DECADCE7A716BB23E570 /* AuthRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuthRepository.swift; sourceTree = "<group>"; };
+		E5BB7C3793FF0DB4F1C11E9D /* AuthRepositoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuthRepositoryTests.swift; sourceTree = "<group>"; };
 		E6DB367E68EBB1EC1988766A /* Pods_TaiwanArtion.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TaiwanArtion.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EC566CD442AB639B68A6B52A /* ExhibitionInfoView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExhibitionInfoView.swift; sourceTree = "<group>"; };
+		F0EA01E1170F7DB7C68F0703 /* DIContainer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -540,6 +596,23 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		7E72378BEE3FAD565D2E8C17 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				3C2073C6474F04AE2F622866 /* HeightCache.swift */,
+			);
+			name = Utilities;
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		8F6F6B3B9FA298E6AF20EAB4 /* UIComponent */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = UIComponent;
+			path = UIComponent;
+			sourceTree = "<group>";
+		};
 		973C17712A1F31D700581DC6 /* Alerts */ = {
 			isa = PBXGroup;
 			children = (
@@ -594,14 +667,17 @@
 				976A03232A147C6700424ACF /* HomeHabbyCollectionViewCell.swift */,
 				976A03322A15D9A200424ACF /* MainPhotosCollectionViewCell.swift */,
 				978834BA2A1D9EE700ADBEE8 /* NewsCollectionViewCell.swift */,
+				977285982ED9671600F5B8AF /* HabbyCollectionViewCell.swift */,
 				978834BC2A1DB10F00ADBEE8 /* AllExhibitionCollectionViewCell.swift */,
 				978834C02A1DD51300ADBEE8 /* SelectedItemsCollectionViewCell.swift */,
 				973C177A2A20B3B200581DC6 /* EquipmentCollectionViewCell.swift */,
+				9772859C2ED967D100F5B8AF /* SelectedItemsCollectionViewCell.swift */,
 				973C17862A2431C300581DC6 /* StarCollectionViewCell.swift */,
 				973C17722A1F385300581DC6 /* ExhibitionCardItemCell.swift */,
 				973C17C32A2AF74800581DC6 /* SearchingCollectionViewCell.swift */,
 				973C17C72A2B405D00581DC6 /* ButtonCollectionViewCell.swift */,
 				97BD68642A57983400F4BCAB /* HeadPhotoCollectionViewCell.swift */,
+				9772859A2ED9671D00F5B8AF /* MonthCollectionViewCell.swift */,
 				9771A15D2A3AAF4A006F4F9D /* RegisterStepCollectionViewCell.swift */,
 				975FD63B2A8F04FE0006F76C /* LocationContentCollectionViewCell.swift */,
 				97BD68682A59017500F4BCAB /* HintCollectionViewCell.swift */,
@@ -611,6 +687,9 @@
 				9746562A2A9E34F9008F4E1F /* MonthsHorizontalCollectionViewCell.swift */,
 				9746562C2A9ECBDB008F4E1F /* FilterNewsHorizontalCollectionViewCell.swift */,
 				97C1A8262AA5716B002C0B08 /* MainDotCollectionViewCell.swift */,
+				977285942ED966E900F5B8AF /* ButtonCollectionViewCell.swift */,
+				977285952ED966E900F5B8AF /* DateCollectionViewCell.swift */,
+				42B9344BFC3DCEAA1A755098 /* BaseCollectionViewCell.swift */,
 			);
 			path = CollectionViewCell;
 			sourceTree = "<group>";
@@ -656,6 +735,7 @@
 				971590762A77CC5E00C3745D /* SearchHistoryTableViewCell.swift */,
 				971590782A788CF400C3745D /* ExhibitionHallTableViewCell.swift */,
 				9715907E2A7A14CA00C3745D /* WebSiteTableViewCell.swift */,
+				39B83D22FD0483A3C6DCF7EA /* BaseTableViewCell.swift */,
 			);
 			path = TableViewCell;
 			sourceTree = "<group>";
@@ -679,6 +759,44 @@
 				97506C1C2A3AC41E00F6BB24 /* FirebaseAuth.swift */,
 			);
 			path = Firebase;
+			sourceTree = "<group>";
+		};
+		9772858B2ED9666A00F5B8AF /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				9772858A2ED9666A00F5B8AF /* AppConfig.swift */,
+			);
+			path = Configuration;
+			sourceTree = "<group>";
+		};
+		9772858D2ED9666A00F5B8AF /* Logger */ = {
+			isa = PBXGroup;
+			children = (
+				9772858C2ED9666A00F5B8AF /* AppLogger.swift */,
+			);
+			path = Logger;
+			sourceTree = "<group>";
+		};
+		9772858F2ED9666A00F5B8AF /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				9772858E2ED9666A00F5B8AF /* KeychainManager.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		977285902ED9666A00F5B8AF /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				9772858B2ED9666A00F5B8AF /* Configuration */,
+				9772858D2ED9666A00F5B8AF /* Logger */,
+				9772858F2ED9666A00F5B8AF /* Storage */,
+				F399CA110185DD349107CEBD /* DI */,
+				CC1FCF595236C6FB8280A74A /* DI */,
+				AABE5B464E9A06CC8D6B0FA1 /* Cache */,
+				CE5175E64EC388DD66AC3547 /* Network */,
+			);
+			path = Core;
 			sourceTree = "<group>";
 		};
 		97AF920C2A871BF700F8F920 /* UserFeature */ = {
@@ -761,6 +879,12 @@
 				97D669FE2A0C6C3700A25935 /* Assets.xcassets */,
 				97D66A002A0C6C3700A25935 /* LaunchScreen.storyboard */,
 				97D66A032A0C6C3700A25935 /* Info.plist */,
+				977285902ED9666A00F5B8AF /* Core */,
+				E6ABF8E21DB5E7EB6BB2F2F3 /* Repository */,
+				A422FCAE59743BCD7845F416 /* Repository */,
+				E3789FF88650551CBD7896D9 /* DataSource */,
+				8F6F6B3B9FA298E6AF20EAB4 /* UIComponent */,
+				7E72378BEE3FAD565D2E8C17 /* Utilities */,
 			);
 			path = TaiwanArtion;
 			sourceTree = "<group>";
@@ -769,6 +893,8 @@
 			isa = PBXGroup;
 			children = (
 				97D66A0C2A0C6C3800A25935 /* TaiwanArtionTests.swift */,
+				C55E9220B63CF8B0BBB6FE85 /* DIContainerTests.swift */,
+				E5BB7C3793FF0DB4F1C11E9D /* AuthRepositoryTests.swift */,
 			);
 			path = TaiwanArtionTests;
 			sourceTree = "<group>";
@@ -788,6 +914,7 @@
 				97D66A292A0C729400A25935 /* UIView.swift */,
 				97D66A2C2A0C730A00A25935 /* UIColor.swift */,
 				9771A1572A3A0B87006F4F9D /* UIButton.swift */,
+				A90BBCD853C1AEF77ECC8D08 /* UIImageView+Loading.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -883,6 +1010,7 @@
 				974656222A9CD6FD008F4E1F /* NewsSearchingResultView.swift */,
 				974656282A9DEDE2008F4E1F /* TitleCollectionReusableHeaderView.swift */,
 				9772165C2A9F80AE00E9C5B1 /* ExhibitionCalendarView.swift */,
+				D74F600919FB3DF5425AE992 /* Components */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -909,6 +1037,84 @@
 				9772165E2A9F80D700E9C5B1 /* ExhibitionCalendarViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		A422FCAE59743BCD7845F416 /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+				D005DECADCE7A716BB23E570 /* AuthRepository.swift */,
+				77F80A5483FBD9A5214F3F9E /* FirebaseAuthRepository.swift */,
+				4A1EE7FF7C7DB6EF0459297F /* ExhibitionRepository.swift */,
+				6602D56E62E529BE4B63C7C4 /* FirebaseExhibitionRepository.swift */,
+				909355264CCD7B3FF2F11B6A /* NewsRepository.swift */,
+				80E76DB26D305A554382C1E9 /* FirebaseNewsRepository.swift */,
+			);
+			name = Repository;
+			path = Repository;
+			sourceTree = "<group>";
+		};
+		AABE5B464E9A06CC8D6B0FA1 /* Cache */ = {
+			isa = PBXGroup;
+			children = (
+				83D2DCA88EDA96DD7B437845 /* DataCache.swift */,
+			);
+			name = Cache;
+			path = Cache;
+			sourceTree = "<group>";
+		};
+		CC1FCF595236C6FB8280A74A /* DI */ = {
+			isa = PBXGroup;
+			children = (
+				F0EA01E1170F7DB7C68F0703 /* DIContainer.swift */,
+			);
+			name = DI;
+			path = DI;
+			sourceTree = "<group>";
+		};
+		CE5175E64EC388DD66AC3547 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				5927CBC4D6E90363FBD9BCF3 /* NetworkMonitor.swift */,
+			);
+			name = Network;
+			path = Network;
+			sourceTree = "<group>";
+		};
+		D74F600919FB3DF5425AE992 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				2F9B03716332818066BB6B9C /* SectionHeaderView.swift */,
+				2EBF534D3647B838857C0A95 /* TagLabel.swift */,
+				EC566CD442AB639B68A6B52A /* ExhibitionInfoView.swift */,
+			);
+			name = Components;
+			path = Components;
+			sourceTree = "<group>";
+		};
+		E3789FF88650551CBD7896D9 /* DataSource */ = {
+			isa = PBXGroup;
+			children = (
+				170854A270B3E306427AF6AC /* SearchDataSource.swift */,
+				5EB7765A70BD2ECBBC1C80F0 /* ExhibitionCardDataSource.swift */,
+			);
+			name = DataSource;
+			path = DataSource;
+			sourceTree = "<group>";
+		};
+		E6ABF8E21DB5E7EB6BB2F2F3 /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Repository;
+			path = TaiwanArtion/Repository;
+			sourceTree = "<group>";
+		};
+		F399CA110185DD349107CEBD /* DI */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = DI;
+			path = TaiwanArtion/Core/DI;
 			sourceTree = "<group>";
 		};
 		F7DDB3605FD1ABAC38323100 /* Pods */ = {
@@ -1086,9 +1292,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TaiwanArtion-TaiwanArtionUITests/Pods-TaiwanArtion-TaiwanArtionUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TaiwanArtion-TaiwanArtionUITests/Pods-TaiwanArtion-TaiwanArtionUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1125,9 +1335,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TaiwanArtion/Pods-TaiwanArtion-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TaiwanArtion/Pods-TaiwanArtion-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1176,6 +1390,7 @@
 				973C178B2A24521D00581DC6 /* ExhibitionCardItemCollectionView.swift in Sources */,
 				97BD686B2A5BBCFE00F4BCAB /* YearView.swift in Sources */,
 				973C17912A25F0D900581DC6 /* EvaluateView.swift in Sources */,
+				977285992ED9671600F5B8AF /* HabbyCollectionViewCell.swift in Sources */,
 				973C17BE2A29937B00581DC6 /* DateCollectionViewCell.swift in Sources */,
 				973C17932A26D56200581DC6 /* SliderTableViewCell.swift in Sources */,
 				97506C2D2A3C28B400F6BB24 /* EmailVerifyView.swift in Sources */,
@@ -1231,6 +1446,8 @@
 				975FD6452A9460DB0006F76C /* MapAnnocationView.swift in Sources */,
 				976A03332A15D9A200424ACF /* MainPhotosCollectionViewCell.swift in Sources */,
 				973C17AA2A27456F00581DC6 /* Area.swift in Sources */,
+				977285962ED966E900F5B8AF /* ButtonCollectionViewCell.swift in Sources */,
+				977285972ED966E900F5B8AF /* DateCollectionViewCell.swift in Sources */,
 				973C17752A1F3A4400581DC6 /* ExhibitionCardItems.swift in Sources */,
 				97BD685D2A563AD900F4BCAB /* BirthTableViewCell.swift in Sources */,
 				9771A1482A39F0D4006F4F9D /* LittleTopPopUpView.swift in Sources */,
@@ -1242,6 +1459,7 @@
 				97D669F62A0C6C3600A25935 /* AppDelegate.swift in Sources */,
 				9746562B2A9E34F9008F4E1F /* MonthsHorizontalCollectionViewCell.swift in Sources */,
 				973C17872A2431C400581DC6 /* StarCollectionViewCell.swift in Sources */,
+				9772859D2ED967D100F5B8AF /* SelectedItemsCollectionViewCell.swift in Sources */,
 				974656292A9DEDE2008F4E1F /* TitleCollectionReusableHeaderView.swift in Sources */,
 				973C837C2A5FBA6C00490D25 /* LoginViewController.swift in Sources */,
 				976A03182A0E8B7700424ACF /* AllExhibitionTableViewCell.swift in Sources */,
@@ -1300,6 +1518,9 @@
 				97BD68722A5BE3A700F4BCAB /* DateInterface.swift in Sources */,
 				974656252A9CD722008F4E1F /* NewsSearchingResultViewController.swift in Sources */,
 				97977C732A715EB500BC89E0 /* MenuCollectionView.swift in Sources */,
+				977285912ED9666A00F5B8AF /* KeychainManager.swift in Sources */,
+				977285922ED9666A00F5B8AF /* AppLogger.swift in Sources */,
+				977285932ED9666A00F5B8AF /* AppConfig.swift in Sources */,
 				97506C1B2A3AC40F00F6BB24 /* FirebaseDatabase.swift in Sources */,
 				97977C6F2A70EC0F00BC89E0 /* FlexibleTabBarCollectionViewCell.swift in Sources */,
 				973C83742A5F6D3500490D25 /* PopUpViewController.swift in Sources */,
@@ -1327,6 +1548,7 @@
 				976A032C2A15CD1700424ACF /* HomeViewModel.swift in Sources */,
 				973C177F2A20B5F300581DC6 /* ButtonTableViewCell.swift in Sources */,
 				97C1A8272AA5716B002C0B08 /* MainDotCollectionViewCell.swift in Sources */,
+				9772859B2ED9671D00F5B8AF /* MonthCollectionViewCell.swift in Sources */,
 				97E0F5922A8E2330004D6C0F /* InputChecker.swift in Sources */,
 				97BD686D2A5BBD0F00F4BCAB /* GenderView.swift in Sources */,
 				97506C232A3AC5F600F6BB24 /* InputTextFieldTableViewCell.swift in Sources */,
@@ -1363,6 +1585,24 @@
 				97FD070F2A658DB200A64808 /* ResetSucceedViewController.swift in Sources */,
 				976A03312A15D86800424ACF /* MainPhotosTableViewCell.swift in Sources */,
 				97FD07132A665A5D00A64808 /* AccountSettingViewController.swift in Sources */,
+				A913F5291647106E3CA5F4F7 /* DIContainer.swift in Sources */,
+				89F63CB8C461DA6E67855789 /* AuthRepository.swift in Sources */,
+				6091CAD03AD62D7BEC119A20 /* FirebaseAuthRepository.swift in Sources */,
+				1A8AB59EAD3DDC8FBC970744 /* ExhibitionRepository.swift in Sources */,
+				87310B4C6672CD5D3CEE6314 /* FirebaseExhibitionRepository.swift in Sources */,
+				C35107DE129623891997C340 /* NewsRepository.swift in Sources */,
+				317323A4C6C067F175C76F19 /* FirebaseNewsRepository.swift in Sources */,
+				26C2D1CEF85D9E0FDBC58F37 /* BaseCollectionViewCell.swift in Sources */,
+				615010FD85AFEF9B4D9E691C /* BaseTableViewCell.swift in Sources */,
+				C7F135AE94A84ED71C63C5AB /* SearchDataSource.swift in Sources */,
+				968E20E98B78BD8FE1AA330A /* ExhibitionCardDataSource.swift in Sources */,
+				B755487E2DC6B8100B7A75BE /* SectionHeaderView.swift in Sources */,
+				88DE577F7D94187CC06ADCF5 /* TagLabel.swift in Sources */,
+				5322F76E1816958EAF2AE9C0 /* ExhibitionInfoView.swift in Sources */,
+				49B26986D19FFE40E23D54D7 /* DataCache.swift in Sources */,
+				72D18F37A1BFF03E475C3A35 /* NetworkMonitor.swift in Sources */,
+				8F2A1684B2EFCF892695471D /* HeightCache.swift in Sources */,
+				6499D8C344E0A98CCD39C39E /* UIImageView+Loading.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1371,6 +1611,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				97D66A0D2A0C6C3800A25935 /* TaiwanArtionTests.swift in Sources */,
+				9DCBB6C523D067CCCB6535F7 /* DIContainerTests.swift in Sources */,
+				039861751ADC0D32C2D8D540 /* AuthRepositoryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1597,7 +1839,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = QRA5DG5SAD;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mj.TaiwanArtionTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1618,7 +1860,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = QRA5DG5SAD;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mj.TaiwanArtionTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

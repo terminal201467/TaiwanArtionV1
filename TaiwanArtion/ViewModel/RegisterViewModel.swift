@@ -78,12 +78,12 @@ class RegisterViewModel: RegisterInputOutputType, RegisterViewModelInput, Regist
     
     //MARK: - Input、output
     var input: RegisterViewModelInput { self }
-    
+
     var output: RegisterViewModelOutput { self }
-    
-    //MARK: - FirebaseAuth
-    private let fireBaseAuth = FirebaseAuth()
-    
+
+    //MARK: - Repository
+    private let authRepository: AuthRepository
+
     private var currentStep: RegisterStep = .phoneVerify
     
     var accountPasswordStep: AccountPasswordVerifyStep = .stepOne
@@ -98,7 +98,9 @@ class RegisterViewModel: RegisterInputOutputType, RegisterViewModelInput, Regist
         }
     }
     
-    init() {
+    init(authRepository: AuthRepository = DIContainer.shared.authRepository) {
+        self.authRepository = authRepository
+
         //input訂閱
         inputPhoneNumberRelay.subscribe(onNext: { [weak self] phoneNumber in
             self?.storePhoneNumber = phoneNumber
@@ -107,7 +109,14 @@ class RegisterViewModel: RegisterInputOutputType, RegisterViewModelInput, Regist
 
         inputSendVerifyCodeActionSubject.subscribe(onNext: { [weak self] in
             guard let self = self else { return }
-            self.fireBaseAuth.sendMessengeVerified(byPhoneNumber: self.storePhoneNumber)
+            self.authRepository.sendPhoneVerificationCode(phoneNumber: self.storePhoneNumber) { result in
+                switch result {
+                case .success:
+                    AppLogger.info("驗證碼已發送", category: .viewModel)
+                case .failure(let error):
+                    AppLogger.error("發送驗證碼失敗", category: .viewModel, error: error)
+                }
+            }
         })
         .disposed(by: disposeBag)
 

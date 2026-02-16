@@ -68,20 +68,21 @@ class LoginViewModel: NormalLoginInput, NormalLoginOutput, NormalLoginViewModelT
     
     var loginSuccessRelay: RxRelay.BehaviorRelay<Bool> = BehaviorRelay(value: false)
     
-    //MARK: - Firebase
-    
-    private let firebaseAuth = FirebaseAuth.shared
-    
+    //MARK: - Repository
+
+    private let authRepository: AuthRepository
+
     //MARK: - UserDefault
-    
+
     private let userDefaultInterface = UserDefaultInterface.shared
-    
+
     //MARK: input/output
     var input: NormalLoginInput { self }
-    
+
     var output: NormalLoginOutput { self }
-    
-    init() {
+
+    init(authRepository: AuthRepository = DIContainer.shared.authRepository) {
+        self.authRepository = authRepository
         accountInput.subscribe(onNext: { [weak self] text in
             guard self != nil else { return }
             AppLogger.debug("帳號輸入中", category: .viewModel)
@@ -98,15 +99,26 @@ class LoginViewModel: NormalLoginInput, NormalLoginOutput, NormalLoginViewModelT
 
         loginActionSubject.subscribe(onNext: { [weak self] in
             guard let self = self else { return }
-            self.firebaseAuth.normalLogin(email: self.accountInput.value, password: self.passwordInput.value) { [weak self] user in
+            self.authRepository.signInWithEmail(
+                email: self.accountInput.value,
+                password: self.passwordInput.value
+            ) { [weak self] result in
                 guard let self = self else { return }
-                self.userDefaultInterface.setUsername(user.name)
-                self.userDefaultInterface.setGender(user.gender)
-                self.userDefaultInterface.setBirth(user.birth)
-                self.userDefaultInterface.setEmail(user.email)
-                self.userDefaultInterface.setPhoneNumber(number: user.phone)
-                self.userDefaultInterface.setHeadImage(user.headImage)
-                self.userDefaultInterface.setIsLoggedIn(true)
+                switch result {
+                case .success(let authResult):
+                    let user = authResult.user
+                    self.userDefaultInterface.setUsername(user.name)
+                    self.userDefaultInterface.setGender(user.gender)
+                    self.userDefaultInterface.setBirth(user.birth)
+                    self.userDefaultInterface.setEmail(user.email)
+                    self.userDefaultInterface.setPhoneNumber(number: user.phone)
+                    self.userDefaultInterface.setHeadImage(user.headImage)
+                    self.userDefaultInterface.setIsLoggedIn(true)
+                    self.loginSuccessRelay.accept(true)
+                case .failure(let error):
+                    AppLogger.error("登入失敗", category: .viewModel, error: error)
+                    self.loginSuccessRelay.accept(false)
+                }
             }
         })
         .disposed(by: disposeBag)

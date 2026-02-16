@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// API 回應快取層，使用 NSCache 實現記憶體快取
 final class DataCache {
