@@ -154,12 +154,12 @@ final class DIContainerTests: XCTestCase {
 
         // When
         // 首次訪問 repository
-        let repo1 = container.exhibitionRepository
-        let repo2 = container.exhibitionRepository
+        let repo1 = container.exhibitionRepository as AnyObject
+        let repo2 = container.exhibitionRepository as AnyObject
 
         // Then
         // 應該返回相同的實例（lazy 只初始化一次）
-        XCTAssertTrue(repo1 === (repo2 as AnyObject), "lazy 屬性應該返回相同的實例")
+        XCTAssertTrue(repo1 === repo2, "lazy 屬性應該返回相同的實例")
     }
 
     // MARK: - Thread Safety Tests

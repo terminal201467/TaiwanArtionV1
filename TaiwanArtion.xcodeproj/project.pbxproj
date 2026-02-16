@@ -13,6 +13,7 @@
 		26C2D1CEF85D9E0FDBC58F37 /* BaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B9344BFC3DCEAA1A755098 /* BaseCollectionViewCell.swift */; };
 		312571B3EEECB9F7C5CD3B99 /* Pods_TaiwanArtionTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 014A2C7A7A3F85FF4D3CEE24 /* Pods_TaiwanArtionTests.framework */; };
 		317323A4C6C067F175C76F19 /* FirebaseNewsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E76DB26D305A554382C1E9 /* FirebaseNewsRepository.swift */; };
+		3D65AA02441F94CCDC052259 /* SearchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484B193077780FF01A39EF5F /* SearchUITests.swift */; };
 		42CD7883526BCC1131AC1105 /* Pods_TaiwanArtion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6DB367E68EBB1EC1988766A /* Pods_TaiwanArtion.framework */; };
 		49B26986D19FFE40E23D54D7 /* DataCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D2DCA88EDA96DD7B437845 /* DataCache.swift */; };
 		5322F76E1816958EAF2AE9C0 /* ExhibitionInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC566CD442AB639B68A6B52A /* ExhibitionInfoView.swift */; };
@@ -23,6 +24,7 @@
 		87310B4C6672CD5D3CEE6314 /* FirebaseExhibitionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6602D56E62E529BE4B63C7C4 /* FirebaseExhibitionRepository.swift */; };
 		88DE577F7D94187CC06ADCF5 /* TagLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBF534D3647B838857C0A95 /* TagLabel.swift */; };
 		89F63CB8C461DA6E67855789 /* AuthRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D005DECADCE7A716BB23E570 /* AuthRepository.swift */; };
+		8A1873C65F8FA15AC01996AC /* CalendarUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EF6A9FD1B3309F90BED30A /* CalendarUITests.swift */; };
 		8F2A1684B2EFCF892695471D /* HeightCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2073C6474F04AE2F622866 /* HeightCache.swift */; };
 		968E20E98B78BD8FE1AA330A /* ExhibitionCardDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EB7765A70BD2ECBBC1C80F0 /* ExhibitionCardDataSource.swift */; };
 		9705E5032A4349AD00FD81D1 /* PersonalInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9705E5022A4349AD00FD81D1 /* PersonalInfoViewController.swift */; };
@@ -241,9 +243,12 @@
 		97FF7AE22AA1DE5B0090F338 /* NewsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97FF7AE12AA1DE5B0090F338 /* NewsTableViewCell.swift */; };
 		9DCBB6C523D067CCCB6535F7 /* DIContainerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55E9220B63CF8B0BBB6FE85 /* DIContainerTests.swift */; };
 		A913F5291647106E3CA5F4F7 /* DIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0EA01E1170F7DB7C68F0703 /* DIContainer.swift */; };
+		AE13CE7AB34F9AABFD383BD4 /* ProfileUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6596A72AB875114955AE7E2A /* ProfileUITests.swift */; };
 		B755487E2DC6B8100B7A75BE /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F9B03716332818066BB6B9C /* SectionHeaderView.swift */; };
 		C35107DE129623891997C340 /* NewsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909355264CCD7B3FF2F11B6A /* NewsRepository.swift */; };
 		C7F135AE94A84ED71C63C5AB /* SearchDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170854A270B3E306427AF6AC /* SearchDataSource.swift */; };
+		D550A0AD61CEA013A3049EB4 /* HomeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6475FE6FBB0CDF1180D7BAB /* HomeUITests.swift */; };
+		F5261B49490DEC5EF4DB4936 /* CollectionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73AC2F4D570FB9ED75C4DECD /* CollectionUITests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -269,16 +274,20 @@
 		170854A270B3E306427AF6AC /* SearchDataSource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchDataSource.swift; sourceTree = "<group>"; };
 		2EBF534D3647B838857C0A95 /* TagLabel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagLabel.swift; sourceTree = "<group>"; };
 		2F9B03716332818066BB6B9C /* SectionHeaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
+		31EF6A9FD1B3309F90BED30A /* CalendarUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarUITests.swift; sourceTree = "<group>"; };
 		32DB8B2332C019BA38D5F558 /* Pods-TaiwanArtionTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaiwanArtionTests.release.xcconfig"; path = "Target Support Files/Pods-TaiwanArtionTests/Pods-TaiwanArtionTests.release.xcconfig"; sourceTree = "<group>"; };
 		39B83D22FD0483A3C6DCF7EA /* BaseTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
 		3C2073C6474F04AE2F622866 /* HeightCache.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HeightCache.swift; sourceTree = "<group>"; };
 		42B9344BFC3DCEAA1A755098 /* BaseCollectionViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewCell.swift; sourceTree = "<group>"; };
+		484B193077780FF01A39EF5F /* SearchUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchUITests.swift; sourceTree = "<group>"; };
 		4A1EE7FF7C7DB6EF0459297F /* ExhibitionRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExhibitionRepository.swift; sourceTree = "<group>"; };
 		567A74B0FD2EDE1289E97BCF /* Pods_TaiwanArtion_TaiwanArtionUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TaiwanArtion_TaiwanArtionUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5927CBC4D6E90363FBD9BCF3 /* NetworkMonitor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		5EB7765A70BD2ECBBC1C80F0 /* ExhibitionCardDataSource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExhibitionCardDataSource.swift; sourceTree = "<group>"; };
+		6596A72AB875114955AE7E2A /* ProfileUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProfileUITests.swift; sourceTree = "<group>"; };
 		6602D56E62E529BE4B63C7C4 /* FirebaseExhibitionRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FirebaseExhibitionRepository.swift; sourceTree = "<group>"; };
 		6CDA925BDC580285C3F0BA4C /* Pods-TaiwanArtion-TaiwanArtionUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaiwanArtion-TaiwanArtionUITests.debug.xcconfig"; path = "Target Support Files/Pods-TaiwanArtion-TaiwanArtionUITests/Pods-TaiwanArtion-TaiwanArtionUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		73AC2F4D570FB9ED75C4DECD /* CollectionUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CollectionUITests.swift; sourceTree = "<group>"; };
 		77F80A5483FBD9A5214F3F9E /* FirebaseAuthRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FirebaseAuthRepository.swift; sourceTree = "<group>"; };
 		80E76DB26D305A554382C1E9 /* FirebaseNewsRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FirebaseNewsRepository.swift; sourceTree = "<group>"; };
 		83D2DCA88EDA96DD7B437845 /* DataCache.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DataCache.swift; sourceTree = "<group>"; };
@@ -524,6 +533,7 @@
 		97FD07182A666D0200A64808 /* ChooseHabbyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseHabbyView.swift; sourceTree = "<group>"; };
 		97FD071A2A66798600A64808 /* ChooseHabbyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseHabbyViewModel.swift; sourceTree = "<group>"; };
 		97FF7AE12AA1DE5B0090F338 /* NewsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsTableViewCell.swift; sourceTree = "<group>"; };
+		A6475FE6FBB0CDF1180D7BAB /* HomeUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeUITests.swift; sourceTree = "<group>"; };
 		A90BBCD853C1AEF77ECC8D08 /* UIImageView+Loading.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImageView+Loading.swift"; sourceTree = "<group>"; };
 		C08E8E419B4D485FD3769595 /* Pods-TaiwanArtion.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaiwanArtion.release.xcconfig"; path = "Target Support Files/Pods-TaiwanArtion/Pods-TaiwanArtion.release.xcconfig"; sourceTree = "<group>"; };
 		C44A9F25A18373C8BF9B8EA9 /* Pods-TaiwanArtion-TaiwanArtionUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaiwanArtion-TaiwanArtionUITests.release.xcconfig"; path = "Target Support Files/Pods-TaiwanArtion-TaiwanArtionUITests/Pods-TaiwanArtion-TaiwanArtionUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -904,6 +914,11 @@
 			children = (
 				97D66A162A0C6C3800A25935 /* TaiwanArtionUITests.swift */,
 				97D66A182A0C6C3800A25935 /* TaiwanArtionUITestsLaunchTests.swift */,
+				A6475FE6FBB0CDF1180D7BAB /* HomeUITests.swift */,
+				484B193077780FF01A39EF5F /* SearchUITests.swift */,
+				73AC2F4D570FB9ED75C4DECD /* CollectionUITests.swift */,
+				6596A72AB875114955AE7E2A /* ProfileUITests.swift */,
+				31EF6A9FD1B3309F90BED30A /* CalendarUITests.swift */,
 			);
 			path = TaiwanArtionUITests;
 			sourceTree = "<group>";
@@ -1292,13 +1307,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TaiwanArtion-TaiwanArtionUITests/Pods-TaiwanArtion-TaiwanArtionUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TaiwanArtion-TaiwanArtionUITests/Pods-TaiwanArtion-TaiwanArtionUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1335,13 +1346,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TaiwanArtion/Pods-TaiwanArtion-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TaiwanArtion/Pods-TaiwanArtion-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1622,6 +1629,11 @@
 			files = (
 				97D66A172A0C6C3800A25935 /* TaiwanArtionUITests.swift in Sources */,
 				97D66A192A0C6C3800A25935 /* TaiwanArtionUITestsLaunchTests.swift in Sources */,
+				D550A0AD61CEA013A3049EB4 /* HomeUITests.swift in Sources */,
+				3D65AA02441F94CCDC052259 /* SearchUITests.swift in Sources */,
+				F5261B49490DEC5EF4DB4936 /* CollectionUITests.swift in Sources */,
+				AE13CE7AB34F9AABFD383BD4 /* ProfileUITests.swift in Sources */,
+				8A1873C65F8FA15AC01996AC /* CalendarUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

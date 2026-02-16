@@ -41,12 +41,16 @@ class HomeView: UIView {
     let searchButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "search"), for: .normal)
+        button.accessibilityIdentifier = "searchButton"
+        button.accessibilityLabel = "搜尋"
         return button
     }()
-    
+
     let bellButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "bell"), for: .normal)
+        button.accessibilityIdentifier = "bellButton"
+        button.accessibilityLabel = "通知"
         return button
     }()
     
@@ -68,6 +72,7 @@ class HomeView: UIView {
     //MARK: - 基本佈局
     let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
+        tableView.accessibilityIdentifier = "homeTableView"
         tableView.backgroundColor = .white
         tableView.register(MonthTableViewCell.self, forCellReuseIdentifier: MonthTableViewCell.reuseIdentifier)
         tableView.register(HabbyTableViewCell.self, forCellReuseIdentifier: HabbyTableViewCell.reuseIdentifier)
